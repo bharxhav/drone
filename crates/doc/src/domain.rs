@@ -1,12 +1,6 @@
-use std::borrow::Cow;
+use std::{borrow::Cow, todo};
 
-use serde::Deserialize;
-
-use crate::{Client, Documentation, Error, Item};
-
-mod platform;
-mod product;
-mod updates;
+use crate::{Client, Documentation, Error};
 
 const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
 
@@ -51,10 +45,6 @@ impl Domain {
         let scope: Vec<&str> = scope.iter().map(AsRef::as_ref).collect();
         let route = self.route();
 
-        match self {
-            Self::Product => product::get(client, route.as_ref(), &scope).await,
-            Self::Platform => platform::get(client, route.as_ref(), &scope).await,
-            Self::Updates => updates::get(client, route.as_ref(), &scope).await,
-        }
+        todo!()
     }
 }
