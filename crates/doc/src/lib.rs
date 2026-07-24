@@ -4,6 +4,8 @@ mod product;
 mod response;
 mod updates;
 
+use std::borrow::Cow;
+
 pub use error::Error;
 pub use response::Documentation;
 
@@ -63,6 +65,14 @@ impl Domain {
             Self::Product => "Palantir Foundry products' documentation",
             Self::Platform => "Palantir Foundry platform-as-API reference",
             Self::Updates => "Palantir Foundry platform updates",
+        }
+    }
+
+    pub fn route(self) -> Cow<'static, str> {
+        match self {
+            Self::Product => DOCS_HOME.into(),
+            Self::Platform => format!("{DOCS_HOME}api/v2/").into(),
+            Self::Updates => format!("{DOCS_HOME}announcements/").into(),
         }
     }
 }
