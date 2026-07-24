@@ -4,7 +4,7 @@ mod product;
 mod response;
 mod updates;
 
-use error::Error;
+pub use error::Error;
 pub use response::Documentation;
 
 const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
