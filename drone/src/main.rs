@@ -5,8 +5,15 @@ use sysexits::ExitCode;
 
 use crate::consts::LOGO;
 
+const VERSION: &str = concat!(
+    env!("CARGO_PKG_VERSION"),
+    " (",
+    env!("DRONE_RELEASE_DATE"),
+    ")"
+);
+
 #[derive(Parser)]
-#[command(version, about = "CLI for Palantir Foundry", before_help = LOGO)]
+#[command(version = VERSION, about = "CLI for Palantir Foundry", before_help = LOGO)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Command>,

@@ -22,6 +22,11 @@ build package="":
 run *args:
     cargo run --package drone -- "$@"
 
+# Build a dated release of the drone CLI.
+[group('porcelain')]
+release date:
+    DRONE_RELEASE_DATE={{ quote(date) }} cargo build --release --package drone
+
 # Check formatting for the workspace or a package.
 [group('read-only')]
 fmt-check package="":
