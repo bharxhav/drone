@@ -4,9 +4,9 @@ use serde::Deserialize;
 
 use crate::{Client, Documentation, Error, Item};
 
-pub(crate) mod platform;
-pub(crate) mod product;
-pub(crate) mod updates;
+mod platform;
+mod product;
+mod updates;
 
 const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
 
@@ -41,6 +41,20 @@ impl Domain {
             Self::Product => DOCS_HOME.into(),
             Self::Platform => format!("{DOCS_HOME}api/v2/").into(),
             Self::Updates => format!("{DOCS_HOME}announcements/").into(),
+        }
+    }
+
+    pub(super) async fn get<S>(self, client: &Client, scope: &[S]) -> Result<Documentation, Error>
+    where
+        S: AsRef<str>,
+    {
+        let scope: Vec<&str> = scope.iter().map(AsRef::as_ref).collect();
+        let route = self.route();
+
+        match self {
+            Self::Product => product::get(client, route.as_ref(), &scope).await,
+            Self::Platform => platform::get(client, route.as_ref(), &scope).await,
+            Self::Updates => updates::get(client, route.as_ref(), &scope).await,
         }
     }
 }

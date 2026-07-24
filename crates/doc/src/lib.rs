@@ -21,13 +21,7 @@ impl Client {
     where
         S: AsRef<str>,
     {
-        let scope: Vec<&str> = scope.iter().map(AsRef::as_ref).collect();
-
-        match domain {
-            Domain::Product => domain::product::get(self, domain.route().as_ref(), &scope).await,
-            Domain::Platform => domain::platform::get(self, domain.route().as_ref(), &scope).await,
-            Domain::Updates => domain::updates::get(self, domain.route().as_ref(), &scope).await,
-        }
+        domain.get(self, scope).await
     }
 }
 
