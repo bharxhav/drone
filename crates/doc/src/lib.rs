@@ -1,7 +1,43 @@
-pub const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
+mod error;
+mod platform;
+mod product;
+mod response;
+mod updates;
+
+use error::Error;
+pub use response::Documentation;
+
+const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
 
 pub struct Client {
     http: reqwest::Client,
+}
+
+impl Client {
+    pub fn new() -> Self {
+        Self {
+            http: reqwest::Client::new(),
+        }
+    }
+
+    pub async fn get<S>(&self, domain: Domain, scope: &[S]) -> Result<Documentation, Error>
+    where
+        S: AsRef<str>,
+    {
+        let scope: Vec<&str> = scope.iter().map(AsRef::as_ref).collect();
+
+        match domain {
+            Domain::Product => product::get(self, &scope).await,
+            Domain::Platform => platform::get(self, &scope).await,
+            Domain::Updates => updates::get(self, &scope).await,
+        }
+    }
+}
+
+impl Default for Client {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
