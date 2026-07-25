@@ -68,22 +68,22 @@ impl Domain {
             .ok_or(Error::Unavailable)?
             .inner_html();
 
-        let mut next_data: NextData<serde_json::Value> = serde_json::from_str(&next_data)?;
-        next_data.domain = Some(self);
+        let next_data: NextData = serde_json::from_str(&next_data)?;
 
-        next_data.try_into()
+        Documentation::try_from((self, next_data.props.page_props))
     }
 }
 
 #[derive(Deserialize)]
-pub(super) struct NextData<T> {
-    pub(super) props: Props<T>,
-    #[serde(skip)]
-    pub(super) domain: Option<Domain>,
+struct NextData {
+    props: Props,
 }
 
 #[derive(Deserialize)]
-pub(super) struct Props<T> {
+struct Props {
     #[serde(rename = "pageProps")]
-    pub(super) page_props: T,
+    page_props: PalantirPageProps,
 }
+
+#[derive(Deserialize)]
+pub(super) struct PalantirPageProps(pub(super) serde_json::Value);
