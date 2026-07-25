@@ -1,18 +1,29 @@
-use std::todo;
+use std::{collections::HashMap, sync::Arc, todo};
 
-use crate::{Domain, Error, domain::PalantirPageData};
+use crate::{Domain, Error, Scope, domain::PalantirPageData};
 
 #[derive(Debug)]
 pub enum Documentation {
     Index(Vec<NavItem>),
-    Page(Page),
+    Page(Arc<Page>),
 }
 
 #[derive(Debug)]
 pub struct NavItem {}
 
 #[derive(Debug)]
-pub struct Page {}
+pub struct Page {
+    pub scope: Scope,
+    // `markdown`
+    pub content: String,
+    // Resolved Routes against DOCS_HOME
+    pub images: HashMap<String, String>,
+    pub preview: bool,
+    // `pageNeighbors.previousPage.url` into()
+    pub next: Option<Scope>,
+    // `pageNeighbors.nextPage.url` into()
+    pub prev: Option<Scope>,
+}
 
 impl TryFrom<PalantirPageData> for Documentation {
     type Error = Error;
