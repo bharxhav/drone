@@ -23,6 +23,14 @@ pub enum Error {
     #[diagnostic(code(doc::selector))]
     Selector(String),
 
+    #[error("documentation image has no media type")]
+    #[diagnostic(code(doc::missing_media_type))]
+    MissingMediaType,
+
+    #[error("documentation image has an invalid media type: {0}")]
+    #[diagnostic(code(doc::media_type))]
+    MediaType(String),
+
     #[error("documentation data is unavailable")]
     #[diagnostic(code(doc::unavailable))]
     Unavailable,
