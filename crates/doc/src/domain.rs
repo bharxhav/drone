@@ -13,7 +13,8 @@ pub(super) struct PalantirPageData {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-pub enum Domain {
+
+pub(super) enum Domain {
     Product,
     Platform,
     Updates,
@@ -36,6 +37,10 @@ impl Domain {
             Self::Platform => "Palantir Foundry platform-as-API reference",
             Self::Updates => "Palantir Foundry platform updates",
         }
+    }
+
+    pub fn from_scope(scope: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|domain| domain.name() == scope)
     }
 
     pub fn route(self) -> Cow<'static, str> {
