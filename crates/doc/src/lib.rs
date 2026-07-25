@@ -1,18 +1,21 @@
 mod domain;
 mod error;
 mod response;
+mod scope;
 
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::RwLock;
 
 pub use error::Error;
 pub use response::*;
+pub use scope::Scope;
 
 use domain::Domain;
+use scope::Route;
 
 pub struct Client {
     http: reqwest::Client,
-    cache: RwLock<HashMap<Vec<String>, Arc<Page>>>,
+    cache: RwLock<HashMap<Scope, Arc<Page>>>,
 }
 
 impl Client {
@@ -23,15 +26,9 @@ impl Client {
         }
     }
 
-    pub async fn get<S>(&self, scope: &[S]) -> Result<Documentation, Error>
-    where
-        S: AsRef<str>,
-    {
-        // 1. Normalize the requested path into its cache key.
-        let cache_key: Vec<String> = scope
-            .iter()
-            .map(|segment| segment.as_ref().trim_matches('/').to_owned())
-            .collect();
+    pub async fn get(&self, scope: Scope) -> Result<Documentation, Error> {
+        // 1. Use the normalized scope as the cache key.
+        let cache_key = scope;
 
         // 2. Early Return on Cache Hit.
         if let Some(page) = self.cache.read().await.get(&cache_key) {
