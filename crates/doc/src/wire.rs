@@ -1,10 +1,22 @@
-use std::collections::HashMap;
+use std::todo;
 
 use serde::Deserialize;
+
+use crate::{Documentation, Scope};
 
 pub(crate) enum ExtractedPage {
     Generic(GenericPage),
     Specification(SpecPage),
+}
+
+impl ExtractedPage {
+    pub fn doc(&self) -> Option<Documentation> {
+        todo!()
+    }
+
+    pub fn redirected_doc(&self) -> Option<(Scope, Documentation)> {
+        todo!()
+    }
 }
 
 /// Deserialization target for standard product/updates pages
