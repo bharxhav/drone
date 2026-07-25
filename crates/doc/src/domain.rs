@@ -1,17 +1,11 @@
-use serde_json::Value;
-
 use reqwest::header::CONTENT_TYPE;
+use serde_json::Value;
 
 use crate::{
     Documentation, Error, Image, Scope,
     scope::{Path, Route},
+    wire::ExtractedPage,
 };
-
-pub(super) struct PalantirPageData {
-    pub domain: Domain,
-    pub scope: Scope,
-    pub content: Value,
-}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 
@@ -81,18 +75,15 @@ impl Domain {
             .inner_html();
 
         let next_data: Value = serde_json::from_str(&next_data)?;
-        let content = next_data
+        let page_props = next_data
             .pointer("/props/pageProps")
-            .cloned()
             .ok_or(Error::Unavailable)?;
 
-        let page_data = PalantirPageData {
-            domain: self,
-            scope,
-            content,
-        };
+        let extracted = ExtractedPage::parse(self, page_props)?;
 
-        Documentation::try_from(page_data)
+        extracted
+            .doc()
+            .ok_or_else(|| Error::NotFound(scope.to_string()))
     }
 
     pub(super) async fn resolve_image(
