@@ -12,7 +12,7 @@ use domain::Domain;
 
 pub struct Client {
     http: reqwest::Client,
-    cache: RwLock<HashMap<Vec<String>, Arc<Documentation>>>,
+    cache: RwLock<HashMap<Vec<String>, Arc<Page>>>,
 }
 
 impl Client {
@@ -23,7 +23,7 @@ impl Client {
         }
     }
 
-    pub async fn get<S>(&self, scope: &[S]) -> Result<Arc<Documentation>, Error>
+    pub async fn get<S>(&self, scope: &[S]) -> Result<Documentation, Error>
     where
         S: AsRef<str>,
     {
@@ -34,8 +34,8 @@ impl Client {
             .collect();
 
         // 2. Early Return on Cache Hit.
-        if let Some(documentation) = self.cache.read().await.get(&cache_key) {
-            return Ok(Arc::clone(documentation));
+        if let Some(page) = self.cache.read().await.get(&cache_key) {
+            return Ok(Documentation::Page(Arc::clone(page)));
         }
 
         // 3. Build the root index or fetch the requested domain document.
@@ -48,12 +48,15 @@ impl Client {
             domain.get(&self.http, &cache_key[1..]).await?
         };
 
-        let documentation = Arc::new(documentation);
+        // 4. Cache only terminal pages. Navigation is context-specific and may expose an
+        // incomplete route tree, so caching it could incorrectly reject valid routes.
+        if let Documentation::Page(page) = &documentation {
+            let mut cache = self.cache.write().await;
+            cache.entry(cache_key).or_insert_with(|| Arc::clone(page));
+        }
 
-        // 4. Cache the result, preserving a value inserted by a concurrent request.
-
-        // 5. Return a shared handle to the cached document.
-        Ok(Arc::clone(documentation))
+        // 5. Return the fetched document.
+        Ok(documentation)
     }
 }
 
