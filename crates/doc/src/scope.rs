@@ -1,12 +1,23 @@
-//! `Scope  product/notepad/aip-features`
-//! `Path   docs/foundry/notepad/aip-features`
-//! `Route  https://www.palantir.com/docs/foundry/notepad/aip-features/`
+//! URL representations used by the documentation client.
+//!
+//! Palantir's documentation site is rooted at `https://www.palantir.com/docs/`. Routes in
+//! its payloads, such as `/foundry/notepad/aip-features/`, are relative to that root. The
+//! same location therefore has three equivalent representations:
+//!
+//! ```text
+//! Scope  product/notepad/aip-features
+//! Path   foundry/notepad/aip-features
+//! Route  https://www.palantir.com/docs/foundry/notepad/aip-features/
+//! ```
+//!
+//! `Scope` is the public, domain-oriented input. `Path` is Palantir's payload form, and
+//! `Route` is the fully resolved URL used for HTTP requests.
 
 use std::ops::Deref;
 
 use crate::domain::Domain;
 
-/// Url with `https://www.palantir.com/`.
+/// URL with `https://www.palantir.com/docs/`.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub(super) struct Route(String);
 
@@ -38,13 +49,13 @@ impl From<Scope> for Route {
     }
 }
 
-/// A path relative to `https://www.palantir.com/`.
+/// A path relative to `https://www.palantir.com/docs/`.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub(super) struct Path(Vec<String>);
 
 impl Path {
     pub const fn base_url() -> &'static str {
-        "https://www.palantir.com/"
+        "https://www.palantir.com/docs/"
     }
 
     fn from_segments(path: &str) -> Self {
