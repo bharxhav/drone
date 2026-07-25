@@ -1,6 +1,11 @@
 use serde_json::Value;
 
-use crate::{Documentation, Error, Scope, scope::Route};
+use reqwest::header::CONTENT_TYPE;
+
+use crate::{
+    Documentation, Error, Image, Scope,
+    scope::{Path, Route},
+};
 
 pub(super) struct PalantirPageData {
     pub domain: Domain,
@@ -88,5 +93,29 @@ impl Domain {
         };
 
         Documentation::try_from(page_data)
+    }
+
+    pub(super) async fn resolve_image(
+        self,
+        http: &reqwest::Client,
+        path: Path,
+    ) -> Result<Image, Error> {
+        let route = Route::from(path.clone());
+
+        let response = http.get(route.as_ref()).send().await?.error_for_status()?;
+        let media_type: mime::Mime = response
+            .headers()
+            .get(CONTENT_TYPE)
+            .and_then(|value| value.to_str().ok())
+            .ok_or(Error::MissingMediaType)?
+            .parse::<mime::Mime>()
+            .map_err(|error| Error::MediaType(error.to_string()))?;
+        let content = response.bytes().await?;
+
+        Ok(Image {
+            route: path,
+            media_type,
+            content,
+        })
     }
 }
