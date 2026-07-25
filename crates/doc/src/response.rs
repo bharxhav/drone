@@ -1,6 +1,6 @@
 use std::todo;
 
-use crate::{Domain, Error, domain::PalantirPageProps};
+use crate::{Domain, Error, domain::PalantirPageData};
 
 #[derive(Debug)]
 pub enum Documentation {
@@ -14,10 +14,10 @@ pub struct NavItem {}
 #[derive(Debug)]
 pub struct Page {}
 
-impl TryFrom<(Domain, PalantirPageProps)> for Documentation {
+impl TryFrom<PalantirPageData> for Documentation {
     type Error = Error;
 
-    fn try_from((domain, page_props): (Domain, PalantirPageProps)) -> Result<Self, Self::Error> {
+    fn try_from(page_props: PalantirPageData) -> Result<Self, Self::Error> {
         todo!()
     }
 }

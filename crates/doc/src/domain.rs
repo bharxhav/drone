@@ -1,10 +1,16 @@
 use std::borrow::Cow;
 
-use serde::Deserialize;
+use serde_json::Value;
 
 use crate::{Client, Documentation, Error};
 
 const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
+
+pub(super) struct PalantirPageData {
+    pub domain: Domain,
+    pub scope: Vec<String>,
+    pub content: Value,
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Domain {
@@ -68,22 +74,21 @@ impl Domain {
             .ok_or(Error::Unavailable)?
             .inner_html();
 
-        let next_data: NextData = serde_json::from_str(&next_data)?;
+        let next_data: Value = serde_json::from_str(&next_data)?;
+        let content = next_data
+            .pointer("/props/pageProps")
+            .cloned()
+            .ok_or(Error::Unavailable)?;
 
-        Documentation::try_from((self, next_data.props.page_props))
+        let page_data = PalantirPageData {
+            domain: self,
+            scope: scope
+                .iter()
+                .map(|segment| segment.as_ref().trim_matches('/').to_owned())
+                .collect(),
+            content,
+        };
+
+        Documentation::try_from(page_data)
     }
 }
-
-#[derive(Deserialize)]
-struct NextData {
-    props: Props,
-}
-
-#[derive(Deserialize)]
-struct Props {
-    #[serde(rename = "pageProps")]
-    page_props: PalantirPageProps,
-}
-
-#[derive(Deserialize)]
-pub(super) struct PalantirPageProps(pub(super) serde_json::Value);
