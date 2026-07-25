@@ -1,14 +1,10 @@
-use std::borrow::Cow;
-
 use serde_json::Value;
 
-use crate::{Documentation, Error};
-
-const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
+use crate::{Documentation, Error, Scope, scope::Route};
 
 pub(super) struct PalantirPageData {
     pub domain: Domain,
-    pub scope: Vec<String>,
+    pub scope: Scope,
     pub content: Value,
 }
 
@@ -43,11 +39,11 @@ impl Domain {
         Self::ALL.into_iter().find(|domain| domain.name() == scope)
     }
 
-    pub fn route(self) -> Cow<'static, str> {
+    pub const fn path(self) -> &'static [&'static str] {
         match self {
-            Self::Product => DOCS_HOME.into(),
-            Self::Platform => format!("{DOCS_HOME}api/v2/").into(),
-            Self::Updates => format!("{DOCS_HOME}announcements/").into(),
+            Self::Product => &["foundry"],
+            Self::Platform => &["foundry", "api", "v2"],
+            Self::Updates => &["foundry", "announcements"],
         }
     }
 
@@ -59,14 +55,11 @@ impl Domain {
     where
         S: AsRef<str>,
     {
-        let mut route = self.route().into_owned();
-        for segment in scope {
-            route.push_str(segment.as_ref().trim_matches('/'));
-            route.push('/');
-        }
+        let scope = Scope::new(std::iter::once(self.name()).chain(scope.iter().map(AsRef::as_ref)));
+        let route = Route::from(scope.clone());
 
         let html = http
-            .get(&route)
+            .get(route.as_ref())
             .send()
             .await?
             .error_for_status()?
@@ -90,10 +83,7 @@ impl Domain {
 
         let page_data = PalantirPageData {
             domain: self,
-            scope: scope
-                .iter()
-                .map(|segment| segment.as_ref().trim_matches('/').to_owned())
-                .collect(),
+            scope,
             content,
         };
 

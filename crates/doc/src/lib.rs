@@ -35,13 +35,14 @@ impl Client {
         }
 
         // 3. Build the root index or fetch the requested domain document.
-        let documentation = if cache_key.is_empty() {
+        let documentation = if cache_key.is_root() {
             Domain::ALL.into()
         } else {
-            let domain = Domain::from_scope(&cache_key[0])
-                .ok_or_else(|| Error::NotFound(cache_key[0].clone()))?;
+            let domain = cache_key.domain().ok_or_else(|| {
+                Error::NotFound(cache_key.domain_name().unwrap_or_default().into())
+            })?;
 
-            domain.get(&self.http, &cache_key[1..]).await?
+            domain.get(&self.http, cache_key.tail()).await?
         };
 
         // 4. Cache only terminal pages. Navigation is context-specific and may expose an
