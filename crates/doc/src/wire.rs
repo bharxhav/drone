@@ -1,8 +1,9 @@
 use std::todo;
 
 use serde::Deserialize;
+use serde_json::Value;
 
-use crate::{Documentation, Scope};
+use crate::{Documentation, Error, Scope, domain::Domain};
 
 pub(crate) enum ExtractedPage {
     Generic(GenericPage),
@@ -10,6 +11,20 @@ pub(crate) enum ExtractedPage {
 }
 
 impl ExtractedPage {
+    /// Parse pageProps into the appropriate wire type based on domain.
+    pub fn parse(domain: Domain, page_props: &Value) -> Result<Self, Error> {
+        match domain {
+            Domain::Platform => {
+                let spec: SpecPage = serde_json::from_value(page_props.clone())?;
+                Ok(Self::Specification(spec))
+            }
+            Domain::Product | Domain::Updates => {
+                let generic: GenericPage = serde_json::from_value(page_props.clone())?;
+                Ok(Self::Generic(generic))
+            }
+        }
+    }
+
     pub fn doc(&self) -> Option<Documentation> {
         todo!()
     }
