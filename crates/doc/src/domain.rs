@@ -2,7 +2,7 @@ use std::borrow::Cow;
 
 use serde_json::Value;
 
-use crate::{Client, Documentation, Error};
+use crate::{Documentation, Error};
 
 const DOCS_HOME: &str = "https://www.palantir.com/docs/foundry/";
 
@@ -51,7 +51,11 @@ impl Domain {
         }
     }
 
-    pub(super) async fn get<S>(self, client: &Client, scope: &[S]) -> Result<Documentation, Error>
+    pub(super) async fn get<S>(
+        self,
+        http: &reqwest::Client,
+        scope: &[S],
+    ) -> Result<Documentation, Error>
     where
         S: AsRef<str>,
     {
@@ -61,8 +65,7 @@ impl Domain {
             route.push('/');
         }
 
-        let html = client
-            .http
+        let html = http
             .get(&route)
             .send()
             .await?
