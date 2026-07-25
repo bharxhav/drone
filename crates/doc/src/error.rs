@@ -19,6 +19,10 @@ pub enum Error {
         serde_json::Error,
     ),
 
+    #[error("failed to parse documentation selector: {0}")]
+    #[diagnostic(code(doc::selector))]
+    Selector(String),
+
     #[error("documentation data is unavailable")]
     #[diagnostic(code(doc::unavailable))]
     Unavailable,
