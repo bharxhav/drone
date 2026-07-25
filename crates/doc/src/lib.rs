@@ -4,7 +4,7 @@ mod response;
 
 pub use domain::Domain;
 pub use error::Error;
-pub use response::{Documentation, Link, NavItem as Item, Page};
+pub use response::*;
 
 pub struct Client {
     http: reqwest::Client,
