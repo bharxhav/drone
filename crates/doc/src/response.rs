@@ -1,6 +1,9 @@
 use std::{collections::HashMap, sync::Arc, todo};
 
-use crate::{Domain, Error, Scope, domain::PalantirPageData};
+use bytes::Bytes;
+use mime::Mime;
+
+use crate::{Domain, Error, Scope, domain::PalantirPageData, scope::Path};
 
 #[derive(Debug)]
 pub enum Documentation {
@@ -16,13 +19,19 @@ pub struct Page {
     pub scope: Scope,
     // `markdown`
     pub content: String,
-    // Resolved Routes against DOCS_HOME
-    pub images: HashMap<String, String>,
+    pub images: HashMap<String, Image>,
     pub preview: bool,
     // `pageNeighbors.previousPage.url` into()
     pub next: Option<Scope>,
     // `pageNeighbors.nextPage.url` into()
     pub prev: Option<Scope>,
+}
+
+#[derive(Debug)]
+pub struct Image {
+    pub(super) route: Path,
+    pub media_type: Mime,
+    pub content: Bytes,
 }
 
 impl TryFrom<PalantirPageData> for Documentation {
