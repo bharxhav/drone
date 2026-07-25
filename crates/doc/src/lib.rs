@@ -11,7 +11,6 @@ pub use response::*;
 pub use scope::Scope;
 
 use domain::Domain;
-use scope::Route;
 
 pub struct Client {
     http: reqwest::Client,
