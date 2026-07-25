@@ -2,6 +2,7 @@ mod domain;
 mod error;
 mod response;
 mod scope;
+mod wire;
 
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::RwLock;
