@@ -21,3 +21,9 @@ impl TryFrom<PalantirPageData> for Documentation {
         todo!()
     }
 }
+
+impl From<[Domain; 3]> for Documentation {
+    fn from(domains: [Domain; 3]) -> Self {
+        todo!()
+    }
+}
