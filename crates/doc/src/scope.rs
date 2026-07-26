@@ -56,7 +56,7 @@ impl Path {
         "https://www.palantir.com/docs/"
     }
 
-    fn new(path: &str) -> Self {
+    pub(super) fn new(path: &str) -> Self {
         Self(
             path.split('/')
                 .filter(|segment| !segment.is_empty())
