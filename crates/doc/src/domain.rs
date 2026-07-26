@@ -79,7 +79,7 @@ impl Domain {
             .pointer("/props/pageProps")
             .ok_or(Error::Unavailable)?;
 
-        let extracted = ExtractedPage::parse(self, page_props)?;
+        let extracted = ExtractedPage::parse(self, scope.tail(), page_props)?;
 
         extracted
             .doc()
