@@ -12,7 +12,28 @@ pub enum Documentation {
 }
 
 #[derive(Debug)]
-pub struct NavItem {}
+pub enum NavItem {
+    Header {
+        text: String,
+        minimal: bool,
+    },
+    Section {
+        id: String,
+        title: String,
+        items: Vec<Self>,
+    },
+    PageGroup {
+        title: String,
+        pages: Vec<Self>,
+    },
+    PageLink {
+        page_id: String,
+        context: String,
+        text: String,
+        scope: Scope,
+    },
+    Divider,
+}
 
 #[derive(Debug)]
 pub struct Page {
@@ -26,6 +47,7 @@ pub struct Page {
 
 #[derive(Debug)]
 pub struct Image {
+    #[allow(dead_code)]
     pub(super) route: Path,
     pub media_type: Mime,
     pub content: Bytes,
