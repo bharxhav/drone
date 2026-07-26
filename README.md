@@ -9,7 +9,7 @@
 <br>
 <br>
 
-**SYNOPSIS**
+**synopsis**
 
 ```sh
 drone [--help | --version]
@@ -21,7 +21,7 @@ _`<*>` are domain-specific scope segments._
 <br>
 <br>
 
-**VERBS**
+**verbs**
 
 man
 
