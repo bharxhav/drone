@@ -1,17 +1,15 @@
+mod documentation;
 mod domain;
 mod error;
-mod response;
 mod scope;
 mod wire;
 
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::RwLock;
 
+pub use documentation::*;
 pub use error::Error;
-pub use response::*;
 pub use scope::Scope;
-
-use domain::Domain;
 
 pub struct Client {
     http: reqwest::Client,
