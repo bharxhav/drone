@@ -26,8 +26,9 @@ _`<*>` are domain-specific scope segments._
 man
 
 ```sh
-# Browse Palantir Foundry documentation.
 # Opens an interactive terminal ui.
+
+# Browse Palantir Foundry documentation.
 drone man [--json]
 
 # Browse product guides such as `notepad`, `aip-features`.
