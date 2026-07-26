@@ -8,7 +8,7 @@ use crate::{Documentation, Error, NavItem, Page, Scope, domain::Domain, scope::P
 pub(crate) enum ExtractedPage {
     Home(HomePage),
     Generic(GenericPage),
-    Specification(SpecPage),
+    Specification(Box<SpecPage>),
 }
 
 impl ExtractedPage {
@@ -67,7 +67,7 @@ impl ExtractedPage {
             }
             Domain::Platform => {
                 let spec: SpecPage = serde_json::from_value(page_props.clone())?;
-                Ok(Self::Specification(spec))
+                Ok(Self::Specification(Box::new(spec)))
             }
             Domain::Product | Domain::Updates => {
                 let generic: GenericPage = serde_json::from_value(page_props.clone())?;
@@ -210,7 +210,9 @@ impl GenericPage {
 #[serde(rename_all = "camelCase")]
 pub(crate) struct SpecPage {
     pub page: ApiPageContent,
-    pub api_docs_homepage: ApiDocsHomepage,
+    pub category_id: String,
+    pub section_id: String,
+    pub page_id: String,
     #[serde(default)]
     pub should_skip_pagefind_index: bool,
     pub sidebar_nav_items: Vec<WireNavItem>,
@@ -220,16 +222,16 @@ impl SpecPage {
     fn scope(&self) -> Scope {
         Scope::new([
             "platform",
-            self.api_docs_homepage.category_id.as_str(),
-            self.api_docs_homepage.section_id.as_str(),
-            self.api_docs_homepage.page_id.as_str(),
+            self.category_id.as_str(),
+            self.section_id.as_str(),
+            self.page_id.as_str(),
         ])
     }
 
     fn response(&self) -> Page {
         Page {
             scope: self.scope(),
-            content: self.page.content.markdown.clone(),
+            content: self.page.markdown(),
             images: HashMap::new(),
             preview: false,
             next: None,
@@ -239,21 +241,117 @@ impl SpecPage {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct ApiDocsHomepage {
-    pub category_id: String,
-    pub section_id: String,
-    pub page_id: String,
-}
-
-#[derive(Debug, Deserialize)]
 pub(crate) struct ApiPageContent {
+    pub title: String,
     pub content: ApiContent,
 }
 
 #[derive(Debug, Deserialize)]
-pub(crate) struct ApiContent {
-    pub markdown: String,
+#[serde(tag = "type", rename_all = "camelCase")]
+pub(crate) enum ApiContent {
+    Markdown { markdown: String },
+    Endpoint { endpoint: Box<ApiEndpoint> },
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct ApiEndpoint {
+    pub path: String,
+    pub operation_type: ApiOperation,
+    #[serde(default)]
+    pub description: String,
+    #[serde(default)]
+    pub scopes: Vec<ApiScope>,
+    #[serde(default)]
+    pub path_parameters: Vec<ApiParameter>,
+    #[serde(default)]
+    pub query_parameters: Vec<ApiParameter>,
+    pub request: Option<ApiBody>,
+    pub response: Option<ApiResponse>,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct ApiOperation {
+    #[serde(rename = "type")]
+    pub method: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct ApiScope {
+    pub name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct ApiParameter {
+    pub name: String,
+    #[serde(default)]
+    pub description: Option<String>,
+    #[serde(default)]
+    pub required: bool,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct ApiBody {
+    pub body: ApiParameter,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct ApiResponse {
+    pub body: ApiParameter,
+}
+
+impl ApiPageContent {
+    fn markdown(&self) -> String {
+        match &self.content {
+            ApiContent::Markdown { markdown } => markdown.clone(),
+            ApiContent::Endpoint { endpoint } => endpoint.markdown(&self.title),
+        }
+    }
+}
+
+impl ApiEndpoint {
+    fn markdown(&self, title: &str) -> String {
+        let mut output = format!(
+            "# {title}\n\n`{} {}`\n\n{}",
+            self.operation_type.method.to_uppercase(),
+            self.path,
+            self.description.trim()
+        );
+
+        if !self.scopes.is_empty() {
+            output.push_str("\n\n## OAuth scopes\n\n");
+            for scope in &self.scopes {
+                output.push_str(&format!("- `{}`\n", scope.name));
+            }
+        }
+        write_parameters(&mut output, "Path parameters", &self.path_parameters);
+        write_parameters(&mut output, "Query parameters", &self.query_parameters);
+        if let Some(request) = &self.request {
+            write_parameters(&mut output, "Request", std::slice::from_ref(&request.body));
+        }
+        if let Some(response) = &self.response {
+            write_parameters(
+                &mut output,
+                "Response",
+                std::slice::from_ref(&response.body),
+            );
+        }
+        output
+    }
+}
+
+fn write_parameters(output: &mut String, title: &str, parameters: &[ApiParameter]) {
+    if parameters.is_empty() {
+        return;
+    }
+    output.push_str(&format!("\n\n## {title}\n\n"));
+    for parameter in parameters {
+        let required = if parameter.required { " required" } else { "" };
+        output.push_str(&format!("### `{}`{required}\n", parameter.name));
+        if let Some(description) = &parameter.description {
+            output.push_str(&format!("\n{}\n", description.trim()));
+        }
+    }
 }
 
 #[derive(Debug, Deserialize)]
