@@ -26,14 +26,6 @@ impl Domain {
         }
     }
 
-    pub const fn description(self) -> &'static str {
-        match self {
-            Self::Product => "Palantir Foundry products' documentation",
-            Self::Platform => "Palantir Foundry platform-as-API reference",
-            Self::Updates => "Palantir Foundry platform updates",
-        }
-    }
-
     pub fn from_scope(scope: &str) -> Option<Self> {
         Self::ALL.into_iter().find(|domain| domain.name() == scope)
     }
@@ -82,10 +74,11 @@ impl Domain {
         let extracted = ExtractedPage::parse(self, scope.tail(), page_props)?;
 
         extracted
-            .doc()
+            .doc()?
             .ok_or_else(|| Error::NotFound(scope.to_string()))
     }
 
+    #[allow(dead_code)]
     pub(super) async fn resolve_image(
         self,
         http: &reqwest::Client,
