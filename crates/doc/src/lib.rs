@@ -35,7 +35,7 @@ impl Client {
 
         // 3. Build the root index or fetch the requested domain document.
         let documentation = if cache_key.is_root() {
-            Documentation::Index(Vec::new())
+            Documentation::Index(domain::Domain::ALL.map(domain::Domain::nav_item).into())
         } else {
             let domain = cache_key.domain().ok_or_else(|| {
                 Error::NotFound(cache_key.domain_name().unwrap_or_default().into())

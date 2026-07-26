@@ -26,6 +26,23 @@ impl Domain {
         }
     }
 
+    pub const fn description(self) -> &'static str {
+        match self {
+            Self::Product => "Palantir Foundry products' documentation",
+            Self::Platform => "Palantir Foundry platform-as-API reference",
+            Self::Updates => "Palantir Foundry platform updates",
+        }
+    }
+
+    pub fn nav_item(self) -> crate::NavItem {
+        crate::NavItem::PageLink {
+            page_id: self.name().to_owned(),
+            context: String::new(),
+            text: self.description().to_owned(),
+            scope: Scope::new([self.name()]),
+        }
+    }
+
     pub fn from_scope(scope: &str) -> Option<Self> {
         Self::ALL.into_iter().find(|domain| domain.name() == scope)
     }
