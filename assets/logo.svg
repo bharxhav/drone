@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="100" viewBox="0 0 144 100" role="img" aria-labelledby="title">
+  <title id="title">drone logo</title>
+  <style>
+    text { fill: #1f2328; font: 20px/1 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; }
+    @media (prefers-color-scheme: dark) { text { fill: #f0f6fc; } }
+  </style>
+  <text x="72" y="18" text-anchor="middle" xml:space="preserve"><tspan x="72">     ▄     </tspan><tspan x="72" dy="20">  ▄▄███▄▄  </tspan><tspan x="72" dy="20">▄█▀██ ██▀█▄</tspan><tspan x="72" dy="20">▌   ▀ ▀   ▐</tspan><tspan x="72" dy="20">     ▀     </tspan></text>
+</svg>
