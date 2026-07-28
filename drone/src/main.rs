@@ -29,7 +29,7 @@ fn main() -> ExitCode {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Command::Man) => ExitCode::Ok,
+        Some(Command::Man) => ExitCode::Unavailable,
         None => {
             Cli::command().print_help().expect("failed to print help");
             println!();
