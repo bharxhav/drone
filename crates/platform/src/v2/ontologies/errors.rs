@@ -1,0 +1,1 @@
+//! Ontologies namespace API errors.

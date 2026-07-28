@@ -1,0 +1,1 @@
+//! Filesystem namespace API errors.

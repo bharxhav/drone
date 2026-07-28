@@ -1,0 +1,1 @@
+//! Widgets namespace API errors.

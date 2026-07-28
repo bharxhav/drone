@@ -1,0 +1,1 @@
+//! Connectivity namespace API errors.

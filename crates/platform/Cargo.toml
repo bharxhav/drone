@@ -4,8 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bon = "3.9.3"
+bytes = "1.12.1"
+futures-core = "0.3.33"
+http = "1.4.2"
 miette.workspace = true
-reqwest.workspace = true
+reqwest = { workspace = true, features = ["query"] }
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
