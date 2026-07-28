@@ -1,9 +1,11 @@
 mod consts;
+mod man;
 
 use clap::{CommandFactory, Parser, Subcommand};
 use sysexits::ExitCode;
 
 use crate::consts::LOGO;
+use crate::man::Man;
 
 const VERSION: &str = concat!(
     env!("CARGO_PKG_VERSION"),
@@ -22,14 +24,15 @@ struct Cli {
 #[derive(Subcommand)]
 enum Command {
     /// Return the Palantir Foundry documentation.
-    Man,
+    Man(Man),
 }
 
-fn main() -> ExitCode {
+#[tokio::main]
+async fn main() -> ExitCode {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Command::Man) => ExitCode::Ok,
+        Some(Command::Man(man)) => man.run().await,
         None => {
             Cli::command().print_help().expect("failed to print help");
             println!();
