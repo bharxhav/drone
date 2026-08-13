@@ -3,6 +3,7 @@ use serde::Deserialize;
 use super::Client;
 use crate::{FoundryError, Rid};
 
+pub mod action;
 pub mod object_type;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq)]
