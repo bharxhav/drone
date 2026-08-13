@@ -14,6 +14,14 @@ pub struct Ontology {
     pub rid: Rid,
 }
 
+impl Ontology {
+    /// Whether this ontology is identified by `identifier`, which may be a RID or an API name.
+    pub fn matches(&self, identifier: impl AsRef<str>) -> bool {
+        let identifier = identifier.as_ref();
+        self.rid == identifier || self.api_name == identifier
+    }
+}
+
 impl Client {
     pub async fn list_ontologies(&self) -> Result<Vec<Ontology>, FoundryError> {
         #[derive(Deserialize)]
