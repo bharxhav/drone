@@ -162,63 +162,126 @@ GET    /v2/functions/valueTypes/{valueTypeRid}
 GET    /v2/functions/valueTypes/{valueTypeRid}/versionIds/{versionIdVersionId}
 
 [v2/ontologies]
+
+{none}
 GET    /v2/ontologies
+
+{file bytes, content length, content type, filename}
 POST   /v2/ontologies/attachments/upload
-POST   /v2/ontologies/attachments/upload/{attachmentRid}
+
+{attachment rid}
 GET    /v2/ontologies/attachments/{attachmentRid}
 GET    /v2/ontologies/attachments/{attachmentRid}/content
+
+{attachment rid, file bytes, content length, content type, filename}
+POST   /v2/ontologies/attachments/upload/{attachmentRid}
+
+{ontology identifier}
 GET    /v2/ontologies/{ontology}
+GET    /v2/ontologies/{ontology}/fullMetadata
 GET    /v2/ontologies/{ontology}/actionTypes
+GET    /v2/ontologies/{ontology}/actionTypesFullMetadata
+GET    /v2/ontologies/{ontology}/interfaceTypes
+GET    /v2/ontologies/{ontology}/objectTypes
+GET    /v2/ontologies/{ontology}/queryTypes
+POST   /v2/ontologies/{ontology}/scenarios/create
+GET    /v2/ontologies/{ontology}/valueTypes
+
+{ontology identifier, metadata selector lists}
+POST   /v2/ontologies/{ontology}/metadata
+
+{ontology identifier, action type rid}
 GET    /v2/ontologies/{ontology}/actionTypes/byRid/{actionTypeRid}
+
+{ontology identifier, action type rid requests}
 POST   /v2/ontologies/{ontology}/actionTypes/getByRidBatch
+
+{ontology identifier}
 POST   /v2/ontologies/{ontology}/actionTypes/search
+
+{ontology identifier, action type api name}
 GET    /v2/ontologies/{ontology}/actionTypes/{actionType}
 GET    /v2/ontologies/{ontology}/actionTypes/{actionType}/fullMetadata
-GET    /v2/ontologies/{ontology}/actionTypesFullMetadata
+
+{ontology identifier, action type api name, parameters}
 POST   /v2/ontologies/{ontology}/actions/{action}/apply
+
+{ontology identifier, action type api name, batch requests}
 POST   /v2/ontologies/{ontology}/actions/{action}/applyBatch
+
+{ontology identifier, action type api name, batch requests with overrides}
 POST   /v2/ontologies/{ontology}/actions/{action}/applyBatchWithOverrides
+
+{ontology identifier, action type api name, request, overrides}
 POST   /v2/ontologies/{ontology}/actions/{action}/applyWithOverrides
-GET    /v2/ontologies/{ontology}/fullMetadata
-GET    /v2/ontologies/{ontology}/interfaceTypes
+
+{ontology identifier, interface type api name}
 GET    /v2/ontologies/{ontology}/interfaceTypes/{interfaceType}
 GET    /v2/ontologies/{ontology}/interfaceTypes/{interfaceType}/outgoingLinkTypes
-GET    /v2/ontologies/{ontology}/interfaceTypes/{interfaceType}/outgoingLinkTypes/{interfaceLinkType}
 GET    /v2/ontologies/{ontology}/interfaces/{interfaceType}
+
+{ontology identifier, interface type api name, interface link type api name}
+GET    /v2/ontologies/{ontology}/interfaceTypes/{interfaceType}/outgoingLinkTypes/{interfaceLinkType}
+
+{ontology identifier, interface type api name, aggregations, groupings}
 POST   /v2/ontologies/{ontology}/interfaces/{interfaceType}/aggregate
+
+{ontology identifier, interface type api name, interface/object/property selections}
 POST   /v2/ontologies/{ontology}/interfaces/{interfaceType}/search
+
+{ontology identifier, interface type api name, object type api name, primary key, interface link type api name}
 GET    /v2/ontologies/{ontology}/interfaces/{interfaceType}/{objectType}/{primaryKey}/links/{interfaceLinkType}
-POST   /v2/ontologies/{ontology}/metadata
-POST   /v2/ontologies/{ontology}/objectSets/aggregate
+
+{ontology identifier, object set definition}
 POST   /v2/ontologies/{ontology}/objectSets/createTemporary
+
+{ontology identifier, object set definition, aggregations, groupings}
+POST   /v2/ontologies/{ontology}/objectSets/aggregate
+
+{ontology identifier, object set definition, link type api names}
 POST   /v2/ontologies/{ontology}/objectSets/loadLinks
+
+{ontology identifier, object set definition, selected properties}
 POST   /v2/ontologies/{ontology}/objectSets/loadObjects
 POST   /v2/ontologies/{ontology}/objectSets/loadObjectsMultipleObjectTypes
 POST   /v2/ontologies/{ontology}/objectSets/loadObjectsOrInterfaces
+
+{ontology identifier, object set rid}
 GET    /v2/ontologies/{ontology}/objectSets/{objectSetRid}
-GET    /v2/ontologies/{ontology}/objectTypes
+
+{ontology identifier, object type rid requests}
 POST   /v2/ontologies/{ontology}/objectTypes/getByRidBatch
+
+{ontology identifier, object type api name}
 GET    /v2/ontologies/{ontology}/objectTypes/{objectType}
-POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/ciphertexts/{property}/encrypt
 POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/editsHistory
 GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/fullMetadata
-POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/media/{property}/upload
 GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/outgoingLinkTypes
-GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/outgoingLinkTypes/{linkType}
 GET    /v2/ontologies/{ontology}/objects/{objectType}
-POST   /v2/ontologies/{ontology}/objects/{objectType}/aggregate
 POST   /v2/ontologies/{ontology}/objects/{objectType}/count
+
+{ontology identifier, object type api name, aggregations, groupings}
+POST   /v2/ontologies/{ontology}/objects/{objectType}/aggregate
+
+{ontology identifier, object type api name, selected properties}
 POST   /v2/ontologies/{ontology}/objects/{objectType}/search
+
+{ontology identifier, object type api name, property api name, plaintext}
+POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/ciphertexts/{property}/encrypt
+
+{ontology identifier, object type api name, property api name, media bytes}
+POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/media/{property}/upload
+
+{ontology identifier, object type api name, link type api name}
+GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/outgoingLinkTypes/{linkType}
+
+{ontology identifier, object type api name, primary key}
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}
+
+{ontology identifier, object type api name, primary key, property api name}
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}/content
-GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}/{attachmentRid}
-GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}/{attachmentRid}/content
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/ciphertexts/{property}/decrypt
-POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/ciphertexts/{property}/encrypt
-POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/geotemporalSeries/{property}/loadEntries
-GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/links/{linkType}
-GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/links/{linkType}/{linkedObjectPrimaryKey}
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/media/{property}/content
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/media/{property}/metadata
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/timeseries/{propertyName}/latestValue
@@ -226,20 +289,51 @@ GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/timeseries/{p
 GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/timeseries/{property}/lastPoint
 POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/timeseries/{property}/streamPoints
 POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/timeseries/{property}/streamValues
+
+{ontology identifier, object type api name, primary key, property api name, attachment rid}
+GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}/{attachmentRid}
+GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/attachments/{property}/{attachmentRid}/content
+
+{ontology identifier, object type api name, primary key, property api name, plaintext}
+POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/ciphertexts/{property}/encrypt
+
+{ontology identifier, object type api name, primary key, property api name, additional properties, range}
+POST   /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/geotemporalSeries/{property}/loadEntries
+
+{ontology identifier, object type api name, primary key, link type api name}
+GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/links/{linkType}
+
+{ontology identifier, object type api name, primary key, link type api name, linked object primary key}
+GET    /v2/ontologies/{ontology}/objects/{objectType}/{primaryKey}/links/{linkType}/{linkedObjectPrimaryKey}
+
+{ontology identifier, object type rid requests, filter link type rids}
 POST   /v2/ontologies/{ontology}/outgoingLinkTypes/getByRidBatch
+
+{ontology identifier, query type api name, parameters}
 POST   /v2/ontologies/{ontology}/queries/{queryApiName}/execute
-GET    /v2/ontologies/{ontology}/queryTypes
+
+{ontology identifier, query type rid requests}
 POST   /v2/ontologies/{ontology}/queryTypes/getByRidBatch
+
+{ontology identifier, query type api name}
 GET    /v2/ontologies/{ontology}/queryTypes/{queryApiName}
-POST   /v2/ontologies/{ontology}/scenarios/create
+
+{ontology identifier, scenario rid}
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/editedEntityTypes
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/objectTypes/edited
+
+{ontology identifier, scenario rid, object type api name}
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/objectTypes/{objectType}/outgoingLinkTypes/edited
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/objects/{objectType}/conflicting
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/objects/{objectType}/edited
+
+{ontology identifier, scenario rid, object type api name, link type api name}
 GET    /v2/ontologies/{ontology}/scenarios/{scenarioRid}/objects/{objectType}/links/{linkType}/edited
+
+{ontology identifier, transaction id, edits}
 POST   /v2/ontologies/{ontology}/transactions/{transactionId}/edits
-GET    /v2/ontologies/{ontology}/valueTypes
+
+{ontology identifier, value type api name}
 GET    /v2/ontologies/{ontology}/valueTypes/{valueType}
 
 [v2/sql_queries]
