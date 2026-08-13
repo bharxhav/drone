@@ -4,10 +4,11 @@ use url::Url;
 use crate::FoundryError;
 
 pub mod filesystem;
+pub mod ontology;
 
 pub struct Client {
     pub hostname: Url,
-    http: reqwest::Client,
+    pub(crate) http: reqwest::Client,
 }
 
 impl Client {
