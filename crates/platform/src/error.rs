@@ -1,6 +1,21 @@
 use miette::Diagnostic;
 use thiserror::Error;
 
+#[derive(Clone, Debug, Eq, Error, PartialEq)]
+pub enum InvalidRid {
+    #[error("RID must start with `ri.`")]
+    Prefix,
+
+    #[error("RID service must not be empty")]
+    Service,
+
+    #[error("RID must contain an instance and a non-empty type/locator suffix")]
+    Structure,
+
+    #[error("RID components must contain only ASCII letters, digits, `_`, or `-`")]
+    Component,
+}
+
 #[derive(Debug, Diagnostic, Error)]
 pub enum FoundryError {
     #[error(transparent)]
