@@ -6,6 +6,9 @@ use serde_json::Value;
 use super::Client;
 use crate::{FoundryError, Rid};
 
+/// The maximum number of object type RIDs accepted by a single batch request.
+pub const OBJECT_TYPE_BATCH_LIMIT: usize = 100;
+
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ObjectType {
@@ -22,6 +25,14 @@ pub struct ObjectType {
     pub visibility: Option<ObjectTypeVisibility>,
     pub aliases: Option<Vec<String>>,
     pub datasources: Option<Vec<ObjectTypeDatasource>>,
+}
+
+impl ObjectType {
+    /// Whether this object type is identified by `identifier`, which may be a RID or an API name.
+    pub fn matches(&self, identifier: impl AsRef<str>) -> bool {
+        let identifier = identifier.as_ref();
+        self.rid == identifier || self.api_name == identifier
+    }
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -274,6 +285,7 @@ impl Client {
         }
     }
 
+    /// Fetches a single object type by its API name.
     pub async fn get_object_type(
         &self,
         ontology: impl AsRef<str>,
@@ -292,5 +304,101 @@ impl Client {
             .json()
             .await
             .map_err(Into::into)
+    }
+
+    /// Fetches object types by RID in a single batch request.
+    ///
+    /// A RID that does not exist, or that the token cannot read, is omitted from the
+    /// response rather than reported as an error, so the result may be shorter than
+    /// `rids`. Duplicate RIDs are echoed back once per occurrence.
+    ///
+    /// Callers must pass no more than [`OBJECT_TYPE_BATCH_LIMIT`] RIDs, which the server
+    /// enforces. This endpoint is also gated behind Foundry's preview flag, so its
+    /// behaviour may change.
+    async fn get_object_types_by_rid(
+        &self,
+        ontology: &str,
+        rids: &[&str],
+    ) -> Result<Vec<ObjectType>, FoundryError> {
+        #[derive(Serialize)]
+        #[serde(rename_all = "camelCase")]
+        struct Request<'a> {
+            object_type_rid: &'a str,
+        }
+
+        #[derive(Deserialize)]
+        struct Response {
+            data: Vec<ObjectType>,
+        }
+
+        let mut url = self.hostname.join("api/v2/ontologies/")?;
+        url.path_segments_mut()
+            .map_err(|_| url::ParseError::RelativeUrlWithCannotBeABaseBase)?
+            .pop_if_empty()
+            .extend([ontology, "objectTypes", "getByRidBatch"]);
+        // This endpoint is only available as a preview feature.
+        url.query_pairs_mut().append_pair("preview", "true");
+
+        let requests: Vec<Request<'_>> = rids
+            .iter()
+            .map(|rid| Request {
+                object_type_rid: rid,
+            })
+            .collect();
+        let response: Response = self
+            .http
+            .post(url)
+            .json(&serde_json::json!({ "requests": requests }))
+            .send()
+            .await?
+            .error_for_status()?
+            .json()
+            .await?;
+
+        Ok(response.data)
+    }
+
+    /// Resolves a mixed list of object type RIDs and API names, in input order.
+    ///
+    /// RIDs are resolved in batches of [`OBJECT_TYPE_BATCH_LIMIT`], while API names are
+    /// fetched individually. A RID that does not exist, or that the token cannot read, is
+    /// omitted by the server rather than reported as an error; an unknown API name fails
+    /// the whole call.
+    pub async fn get_object_types<I>(
+        &self,
+        ontology: impl AsRef<str>,
+        object_types: impl IntoIterator<Item = I>,
+    ) -> Result<Vec<ObjectType>, FoundryError>
+    where
+        I: AsRef<str>,
+    {
+        let ontology = ontology.as_ref();
+        let identifiers: Vec<I> = object_types.into_iter().collect();
+        let (rids, api_names): (Vec<&str>, Vec<&str>) = identifiers
+            .iter()
+            .map(AsRef::as_ref)
+            .partition(|identifier| identifier.parse::<Rid>().is_ok());
+
+        let mut resolved = Vec::with_capacity(identifiers.len());
+
+        for batch in rids.chunks(OBJECT_TYPE_BATCH_LIMIT) {
+            resolved.extend(self.get_object_types_by_rid(ontology, batch).await?);
+        }
+
+        for api_name in api_names {
+            resolved.push(self.get_object_type(ontology, api_name).await?);
+        }
+
+        let mut ordered = Vec::with_capacity(resolved.len());
+        for identifier in identifiers.iter().map(AsRef::as_ref) {
+            if let Some(position) = resolved
+                .iter()
+                .position(|object_type| object_type.matches(identifier))
+            {
+                ordered.push(resolved.swap_remove(position));
+            }
+        }
+
+        Ok(ordered)
     }
 }

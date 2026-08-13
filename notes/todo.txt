@@ -178,7 +178,6 @@ GET    /v2/ontologies/{ontology}/fullMetadata
 GET    /v2/ontologies/{ontology}/actionTypes
 GET    /v2/ontologies/{ontology}/actionTypesFullMetadata
 GET    /v2/ontologies/{ontology}/interfaceTypes
-GET    /v2/ontologies/{ontology}/objectTypes
 GET    /v2/ontologies/{ontology}/queryTypes
 POST   /v2/ontologies/{ontology}/scenarios/create
 GET    /v2/ontologies/{ontology}/valueTypes
@@ -245,11 +244,7 @@ POST   /v2/ontologies/{ontology}/objectSets/loadObjectsOrInterfaces
 {ontology identifier, object set rid}
 GET    /v2/ontologies/{ontology}/objectSets/{objectSetRid}
 
-{ontology identifier, object type rid requests}
-POST   /v2/ontologies/{ontology}/objectTypes/getByRidBatch
-
 {ontology identifier, object type api name}
-GET    /v2/ontologies/{ontology}/objectTypes/{objectType}
 POST   /v2/ontologies/{ontology}/objectTypes/{objectType}/editsHistory
 GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/fullMetadata
 GET    /v2/ontologies/{ontology}/objectTypes/{objectType}/outgoingLinkTypes
