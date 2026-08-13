@@ -1,6 +1,10 @@
+[[meta]]
+
 [v2/audit]
 GET    /v2/audit/organizations/{organizationRid}/logFiles
 GET    /v2/audit/organizations/{organizationRid}/logFiles/{logFileId}/content
+
+[[fs]]
 
 [v2/datasets]
 POST   /v2/datasets
@@ -36,6 +40,30 @@ POST   /v2/datasets/{datasetRid}/transactions/{transactionRid}/abort
 GET    /v2/datasets/{datasetRid}/transactions/{transactionRid}/build
 POST   /v2/datasets/{datasetRid}/transactions/{transactionRid}/commit
 GET    /v2/datasets/{datasetRid}/transactions/{transactionRid}/job
+
+
+[v2/orchestration]
+POST   /v2/orchestration/builds/create
+POST   /v2/orchestration/builds/getBatch
+POST   /v2/orchestration/builds/search
+GET    /v2/orchestration/builds/{buildRid}
+POST   /v2/orchestration/builds/{buildRid}/cancel
+GET    /v2/orchestration/builds/{buildRid}/jobs
+POST   /v2/orchestration/jobs/getBatch
+GET    /v2/orchestration/jobs/{jobRid}
+GET    /v2/orchestration/scheduleVersions/{scheduleVersionRid}
+GET    /v2/orchestration/scheduleVersions/{scheduleVersionRid}/schedule
+POST   /v2/orchestration/schedules
+POST   /v2/orchestration/schedules/getBatch
+GET    /v2/orchestration/schedules/{scheduleRid}
+PUT    /v2/orchestration/schedules/{scheduleRid}
+DELETE /v2/orchestration/schedules/{scheduleRid}
+POST   /v2/orchestration/schedules/{scheduleRid}/getAffectedResources
+POST   /v2/orchestration/schedules/{scheduleRid}/pause
+POST   /v2/orchestration/schedules/{scheduleRid}/run
+GET    /v2/orchestration/schedules/{scheduleRid}/runs
+POST   /v2/orchestration/schedules/{scheduleRid}/unpause
+
 
 [v2/filesystem]
 POST   /v2/filesystem/folders
@@ -77,19 +105,6 @@ GET    /v2/filesystem/spaces/{spaceRid}
 PUT    /v2/filesystem/spaces/{spaceRid}
 DELETE /v2/filesystem/spaces/{spaceRid}
 
-[v2/functions]
-POST   /v2/functions/executions/{executionId}/cancel
-POST   /v2/functions/executions/{executionId}/getResult
-GET    /v2/functions/queries/getByRid
-POST   /v2/functions/queries/getByRidBatch
-GET    /v2/functions/queries/{queryApiName}
-POST   /v2/functions/queries/{queryApiName}/execute
-POST   /v2/functions/queries/{queryApiName}/executeAsync
-POST   /v2/functions/queries/{queryApiName}/streamingExecute
-POST   /v2/functions/queries/{queryApiName}/streamingExecuteEvents
-GET    /v2/functions/valueTypes/{valueTypeRid}
-GET    /v2/functions/valueTypes/{valueTypeRid}/versionIds/{versionIdVersionId}
-
 [v2/media_sets]
 PUT    /v2/mediasets/media/upload
 GET    /v2/mediasets/{mediaSetRid}
@@ -110,6 +125,41 @@ GET    /v2/mediasets/{mediaSetRid}/items/{mediaItemRid}/transformationJobs/{tran
 POST   /v2/mediasets/{mediaSetRid}/transactions
 POST   /v2/mediasets/{mediaSetRid}/transactions/{transactionId}/abort
 POST   /v2/mediasets/{mediaSetRid}/transactions/{transactionId}/commit
+
+
+[v2/streams]
+GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/getEndOffsets
+GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/getRecords
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishBinaryRecord
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishRecord
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishRecords
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/commitOffsets
+GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/getReadPosition
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/readRecords
+POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/resetOffsets
+POST   /v2/streams/datasets/create
+POST   /v2/streams/datasets/{datasetRid}/streams
+GET    /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}
+POST   /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/reset
+POST   /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers
+DELETE /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}
+
+
+[[ontology]]
+
+
+[v2/functions]
+POST   /v2/functions/executions/{executionId}/cancel
+POST   /v2/functions/executions/{executionId}/getResult
+GET    /v2/functions/queries/getByRid
+POST   /v2/functions/queries/getByRidBatch
+GET    /v2/functions/queries/{queryApiName}
+POST   /v2/functions/queries/{queryApiName}/execute
+POST   /v2/functions/queries/{queryApiName}/executeAsync
+POST   /v2/functions/queries/{queryApiName}/streamingExecute
+POST   /v2/functions/queries/{queryApiName}/streamingExecuteEvents
+GET    /v2/functions/valueTypes/{valueTypeRid}
+GET    /v2/functions/valueTypes/{valueTypeRid}/versionIds/{versionIdVersionId}
 
 [v2/ontologies]
 GET    /v2/ontologies
@@ -192,48 +242,9 @@ POST   /v2/ontologies/{ontology}/transactions/{transactionId}/edits
 GET    /v2/ontologies/{ontology}/valueTypes
 GET    /v2/ontologies/{ontology}/valueTypes/{valueType}
 
-[v2/orchestration]
-POST   /v2/orchestration/builds/create
-POST   /v2/orchestration/builds/getBatch
-POST   /v2/orchestration/builds/search
-GET    /v2/orchestration/builds/{buildRid}
-POST   /v2/orchestration/builds/{buildRid}/cancel
-GET    /v2/orchestration/builds/{buildRid}/jobs
-POST   /v2/orchestration/jobs/getBatch
-GET    /v2/orchestration/jobs/{jobRid}
-GET    /v2/orchestration/scheduleVersions/{scheduleVersionRid}
-GET    /v2/orchestration/scheduleVersions/{scheduleVersionRid}/schedule
-POST   /v2/orchestration/schedules
-POST   /v2/orchestration/schedules/getBatch
-GET    /v2/orchestration/schedules/{scheduleRid}
-PUT    /v2/orchestration/schedules/{scheduleRid}
-DELETE /v2/orchestration/schedules/{scheduleRid}
-POST   /v2/orchestration/schedules/{scheduleRid}/getAffectedResources
-POST   /v2/orchestration/schedules/{scheduleRid}/pause
-POST   /v2/orchestration/schedules/{scheduleRid}/run
-GET    /v2/orchestration/schedules/{scheduleRid}/runs
-POST   /v2/orchestration/schedules/{scheduleRid}/unpause
-
 [v2/sql_queries]
 POST   /v2/sqlQueries/execute
 POST   /v2/sqlQueries/executeOntology
 POST   /v2/sqlQueries/{sqlQueryId}/cancel
 GET    /v2/sqlQueries/{sqlQueryId}/getResults
 GET    /v2/sqlQueries/{sqlQueryId}/getStatus
-
-[v2/streams]
-GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/getEndOffsets
-GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/getRecords
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishBinaryRecord
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishRecord
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/publishRecords
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/commitOffsets
-GET    /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/getReadPosition
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/readRecords
-POST   /v2/highScale/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}/resetOffsets
-POST   /v2/streams/datasets/create
-POST   /v2/streams/datasets/{datasetRid}/streams
-GET    /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}
-POST   /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/reset
-POST   /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers
-DELETE /v2/streams/datasets/{datasetRid}/streams/{streamBranchName}/subscribers/{subscriberSubscriberId}
