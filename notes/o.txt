@@ -1,0 +1,103 @@
+Ontologies v2
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontologies/ontology-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontologies/list-ontologies/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontologies/get-ontology/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontologies/get-ontology-full-metadata/
+
+Action types
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/action-types/action-type-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/action-types/list-action-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/action-types/get-action-type/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/action-types/get-action-type-by-rid/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/action-types/get-action-type-by-rid-batch/
+
+Object types
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/object-type-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/list-object-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-object-type/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-object-type-by-rid-batch/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-object-type-full-metadata/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-object-type-edits-history/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/list-outgoing-link-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-outgoing-link-type/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/object-types/get-outgoing-link-types-by-object-type-rid-batch/
+
+Ontology objects
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-objects/ontology-object-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-objects/list-objects/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-objects/get-object/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-objects/search-objects/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-objects/aggregate-objects/
+
+Linked objects
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/linked-objects/linked-object-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/linked-objects/list-linked-objects/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/linked-objects/get-linked-object/
+
+Attachment properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachment-properties/attachment-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachment-properties/list-property-attachments/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachment-properties/get-attachment-property-by-rid/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachment-properties/get-attachment-property-content/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachment-properties/get-attachment-property-content-by-rid/
+
+Media reference properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/media-reference-properties/media-reference-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/media-reference-properties/read-media-content/
+
+Time series properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-properties/time-series-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-properties/get-first-point/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-properties/get-last-point/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-properties/stream-points/
+
+Time series value bank properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-value-bank-properties/time-series-value-bank-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-value-bank-properties/get-latest-value/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/time-series-value-bank-properties/stream-values/
+
+Geotemporal series properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/geotemporal-series-properties/geotemporal-series-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/geotemporal-series-properties/load-geotemporal-series-entries/
+
+Cipher text properties
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/cipher-text-properties/cipher-text-property-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/cipher-text-properties/decrypt/
+
+Ontology interfaces
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-interfaces/ontology-interface-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-interfaces/list-interface-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-interfaces/get-interface-type/
+
+Actions
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/actions/action-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/actions/apply-action/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/actions/apply-action-batch/
+
+Query types
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/query-types/query-type-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/query-types/list-query-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/query-types/get-query-type/
+
+Queries
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/queries/query-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/queries/execute-query/
+
+Ontology object sets
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/ontology-object-set-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/create-temporary-object-set/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/load-object-set/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/load-object-set-multiple-object-types/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/load-object-set-objects-or-interfaces/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-object-sets/aggregate-object-set/
+
+Attachments
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachments/attachment-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachments/upload-attachment/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachments/get-attachment-content/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/attachments/get-attachment/
+
+Ontology value types
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-value-types/ontology-value-type-basics/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-value-types/get-ontology-value-type/
+https://www.palantir.com/docs/foundry/api/v2/ontologies-v2-resources/ontology-value-types/list-ontology-value-types/
