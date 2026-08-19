@@ -1,12 +1,10 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Deserializer, de::Error};
+use serde::{Deserialize, Deserializer};
 use url::Url;
 
-use super::{config_args::ConfigArgs, resolved_config::ResolvedConfig};
-
 /// Drone's configuration file.
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct ConfigFile {
     /// Deployment used when `--deployment` is omitted.
     pub default: Option<String>,
@@ -32,11 +30,12 @@ pub struct FoundryDeployment {
 }
 
 /// Named aliases for one kind of Foundry resource.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Deserialize)]
 pub struct FoundryResource {
     /// Alias used when its command-line selector is omitted.
     pub default: Option<String>,
     /// Stable Foundry identifiers keyed by local aliases.
+    #[serde(default)]
     pub items: HashMap<String, String>,
 }
 
@@ -55,23 +54,5 @@ where
     D: Deserializer<'de>,
 {
     let value = String::deserialize(deserializer)?;
-    Url::parse(&value).map_err(D::Error::custom)
-}
-
-fn validate_default<E, T>(
-    default: &Option<String>,
-    items: &HashMap<String, T>,
-    kind: &str,
-) -> Result<(), E>
-where
-    E: Error,
-{
-    if let Some(default) = default
-        && !items.contains_key(default)
-    {
-        return Err(E::custom(format!(
-            "default {kind} `{default}` is not configured"
-        )));
-    }
-    Ok(())
+    value.parse().map_err(serde::de::Error::custom)
 }
