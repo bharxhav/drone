@@ -1,4 +1,6 @@
 mod consts;
+mod fs;
+mod o;
 
 use clap::{CommandFactory, Parser, Subcommand};
 use sysexits::ExitCode;
@@ -23,6 +25,12 @@ struct Cli {
 enum Command {
     /// Return the Palantir Foundry documentation.
     Man,
+
+    /// Work with Foundry ontologies.
+    O(o::O),
+
+    /// Work with Foundry filesystem resources.
+    Fs(fs::Fs),
 }
 
 fn main() -> ExitCode {
@@ -30,6 +38,8 @@ fn main() -> ExitCode {
 
     match cli.command {
         Some(Command::Man) => ExitCode::Unavailable,
+        Some(Command::O(command)) => command.run(),
+        Some(Command::Fs(command)) => command.run(),
         None => {
             Cli::command().print_help().expect("failed to print help");
             println!();
