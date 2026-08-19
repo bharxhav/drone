@@ -1,8 +1,8 @@
+mod config;
 mod consts;
-mod fs;
-mod o;
+mod deployment;
 
-use clap::{CommandFactory, Parser, Subcommand};
+use clap::{ArgGroup, CommandFactory, Parser, Subcommand};
 use sysexits::ExitCode;
 
 use crate::consts::LOGO;
@@ -15,8 +15,21 @@ const VERSION: &str = concat!(
 );
 
 #[derive(Parser)]
-#[command(version = VERSION, about = "CLI for Palantir Foundry", before_help = LOGO)]
+#[command(
+    version = VERSION,
+    about = "CLI for Palantir Foundry",
+    before_help = LOGO,
+    group = ArgGroup::new("output").args(["json", "toon"]).multiple(false)
+)]
 struct Cli {
+    /// Emit JSON output.
+    #[arg(long, global = true)]
+    json: bool,
+
+    /// Emit TOON output.
+    #[arg(long, global = true)]
+    toon: bool,
+
     #[command(subcommand)]
     command: Option<Command>,
 }
@@ -26,20 +39,17 @@ enum Command {
     /// Return the Palantir Foundry documentation.
     Man,
 
-    /// Work with Foundry ontologies.
-    O(o::O),
-
-    /// Work with Foundry filesystem resources.
-    Fs(fs::Fs),
+    #[command(flatten)]
+    Deployment(deployment::Command),
 }
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
+    let _ = (cli.json, cli.toon);
 
     match cli.command {
         Some(Command::Man) => ExitCode::Unavailable,
-        Some(Command::O(command)) => command.run(),
-        Some(Command::Fs(command)) => command.run(),
+        Some(Command::Deployment(command)) => command.run(),
         None => {
             Cli::command().print_help().expect("failed to print help");
             println!();
