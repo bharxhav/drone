@@ -1,0 +1,23 @@
+# The deployment used when no deployment is selected explicitly.
+# Omit this when every command should require a deployment.
+default = "production"
+
+[deployments.production]
+base_url = "https://production.palantirfoundry.com/"
+token_env = "FOUNDRY_PRODUCTION_TOKEN"
+
+[deployments.production.ontologies]
+default = "operations"
+
+[deployments.production.ontologies.items]
+operations = "ri.ontology.main.ontology.example"
+
+[deployments.production.spaces]
+default = "operations"
+
+[deployments.production.spaces.items]
+operations = "ri.compass.main.space.example"
+
+[deployments.development]
+base_url = "https://development.palantirfoundry.com/"
+token_env = "FOUNDRY_DEVELOPMENT_TOKEN"
