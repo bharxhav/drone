@@ -1,7 +1,7 @@
 use clap::Subcommand;
 use sysexits::ExitCode;
 
-use crate::config::resolved_config::ResolvedConfig;
+use crate::config::resolved_config::AppConfig;
 
 pub mod fs;
 pub mod o;
@@ -18,7 +18,7 @@ pub enum DeploymentCommand {
 
 impl DeploymentCommand {
     /// Loads configuration, selects a deployment, and dispatches the command.
-    pub fn run(self, config: &ResolvedConfig) -> ExitCode {
+    pub fn run(self, config: &AppConfig) -> ExitCode {
         match self {
             Self::O(command) => command.run(config),
             Self::Fs(command) => command.run(config),
