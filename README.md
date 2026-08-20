@@ -13,17 +13,21 @@
 
 ```sh
 drone [--help | --version]
-drone <verb> [--json] [<domain> [<*>]]
+drone [<resource>...] <verb> [<*>] [--json | --toon]
 ```
 
-_`<*>` are domain-specific scope segments._
+_Resources compose from left to right. Defaults are omittable._
+
+```sh
+drone eu prod search
+drone prod search
+drone search
+```
 
 <br>
 <br>
 
-**verbs**
-
-man
+**man**
 
 ```sh
 # Opens an interactive terminal ui.
@@ -40,6 +44,28 @@ drone man platform <*>
 # Browse Foundry platform updates.
 drone man updates <*>
 ```
+
+<br>
+<br>
+
+**generic verbs**
+
+list
+
+search
+
+save
+
+alias
+
+info
+
+<br>
+<br>
+
+**resource-specific verbs**
+
+coming soon
 
 <br>
 <br>
