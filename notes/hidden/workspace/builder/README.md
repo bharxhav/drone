@@ -39,3 +39,15 @@ These calls were observed on Builder but already have canonical documentation un
 - `POST /documentation/api/v2/release-notes/pagination`: 2 calls total with the same payload.
 
 GraphQL operations sharing `/graphql-gateway/api/bulk` are documented separately because each has a distinct operation name, payload, and purpose.
+
+## Linked routes
+
+The Builder page exposes these normalized internal route patterns:
+
+- `/workspace/builder/create-pipeline`: documented in [`create-pipeline/`](create-pipeline/README.md).
+- `/workspace/aip`: existing route; no duplicate folder created.
+- `/workspace/code/repos/:repositoryRid/contents/:ref`: existing dynamic route; no duplicate folder created.
+- `/workspace/compass`: existing route; no duplicate folder created.
+- `/workspace/compass/view/:folderRid`: existing dynamic route; no duplicate folder created.
+- `/workspace/hubble`: existing route; no duplicate folder created.
+- `/workspace/builder`: current route.
