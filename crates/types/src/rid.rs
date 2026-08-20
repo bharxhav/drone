@@ -1,1 +1,1 @@
-pub struct Rid(String);
+pub struct Rid(pub String);
