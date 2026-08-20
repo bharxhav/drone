@@ -1,6 +1,5 @@
 mod config;
 mod consts;
-mod deployment;
 mod error;
 
 use clap::{ArgGroup, CommandFactory, Parser, Subcommand};
@@ -47,9 +46,6 @@ struct Cli {
 enum Command {
     /// Return the Palantir Foundry documentation.
     Man,
-
-    #[command(flatten)]
-    Deployment(deployment::DeploymentCommand),
 }
 
 fn main() -> ExitCode {
@@ -84,7 +80,6 @@ fn run() -> Result<ExitCode, Error> {
             let _ = &config;
             ExitCode::Unavailable
         }
-        Some(Command::Deployment(command)) => command.run(&config),
         None => {
             Cli::command().print_help().expect("failed to print help");
             println!();
