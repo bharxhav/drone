@@ -6,9 +6,9 @@ use thiserror::Error;
 
 #[derive(Debug, Diagnostic, Error)]
 pub enum Error {
-    #[error("{0}")]
-    #[diagnostic(code(drone::config))]
-    Config(String),
+    #[error("{message}")]
+    #[diagnostic(code(drone::config), help("{help}"))]
+    Config { message: String, help: String },
 
     #[error("invalid command")]
     #[diagnostic(code(drone::usage))]
@@ -26,7 +26,7 @@ pub enum Error {
 impl Error {
     pub fn exit_code(&self) -> ExitCode {
         match self {
-            Self::Config(_) | Self::Toml(_) => ExitCode::Config,
+            Self::Config { .. } | Self::Toml(_) => ExitCode::Config,
             Self::Clap(_) => ExitCode::Usage,
             Self::Io(_) => ExitCode::IoErr,
         }
