@@ -1,8 +1,10 @@
 mod config;
 mod consts;
 mod error;
+mod resources;
+mod verb;
 
-use clap::{ArgGroup, CommandFactory, Parser, Subcommand};
+use clap::{ArgGroup, CommandFactory, FromArgMatches, Parser, Subcommand};
 use etcetera::{AppStrategy, AppStrategyArgs, app_strategy::choose_native_strategy};
 use sysexits::ExitCode;
 
@@ -60,8 +62,6 @@ fn main() -> ExitCode {
 }
 
 fn run() -> Result<ExitCode, Error> {
-    let cli = Cli::parse();
-
     // Locate and deserialize the platform-native configuration file.
     let strategy = choose_native_strategy(AppStrategyArgs {
         top_level_domain: APP_TOP_LEVEL_DOMAIN.into(),
@@ -71,6 +71,12 @@ fn run() -> Result<ExitCode, Error> {
     .map_err(|error| Error::Config(error.to_string()))?;
 
     let content = std::fs::read_to_string(strategy.in_config_dir("config.toml"))?;
+    let mut command = Cli::command();
+    for resource in resources::resources() {
+        command = command.subcommand(verb::command(resource));
+    }
+    let matches = command.try_get_matches()?;
+    let cli = Cli::from_arg_matches(&matches)?;
     let config = AppConfig::new(toml::from_str::<ConfigFile>(&content)?, cli.config)?;
     let _ = (cli.json, cli.toon);
 
@@ -81,6 +87,7 @@ fn run() -> Result<ExitCode, Error> {
             ExitCode::Unavailable
         }
         None => {
+            let _ = (&config.url, &config.token, &config.ontology, &config.space);
             Cli::command().print_help().expect("failed to print help");
             println!();
             ExitCode::Ok
