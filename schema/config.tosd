@@ -7,11 +7,6 @@ itemtype = "types.deployment"
 minlength = 1
 description = "Foundry deployments keyed by local aliases."
 
-    [elements.deployments.default]
-    type = "string"
-    optional = true
-    description = "Deployment alias used when --deployment is omitted."
-
 [types.deployment]
 type = "table"
 
@@ -24,3 +19,8 @@ type = "table"
 type = "string"
 minlength = 1
 description = "Environment variable containing the Foundry token."
+
+[types.deployment.default]
+type = "boolean"
+optional = true
+description = "Select this deployment when no declaration specifies one."
