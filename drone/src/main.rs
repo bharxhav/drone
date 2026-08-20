@@ -7,7 +7,7 @@ use etcetera::{AppStrategy, AppStrategyArgs, app_strategy::choose_native_strateg
 use sysexits::ExitCode;
 
 use crate::{
-    config::{config_args::ConfigArgs, config_file::ConfigFile, resolved_config::AppConfig},
+    config::{args::ConfigArgs, file::ConfigFile, resolved::AppConfig},
     consts::{APP_AUTHOR, APP_NAME, APP_TOP_LEVEL_DOMAIN, LOGO},
     error::Error,
 };

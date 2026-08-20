@@ -1,8 +1,8 @@
 use url::Url;
 
 use super::{
-    config_args::ConfigArgs,
-    config_file::{ConfigFile, FoundryResource},
+    args::ConfigArgs,
+    file::{ConfigFile, FoundryResource},
 };
 use crate::error::Error;
 
