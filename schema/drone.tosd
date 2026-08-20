@@ -1,0 +1,46 @@
+[toml-schema]
+version = "1.0.0"
+
+[elements.resources]
+type = "array"
+itemtype = "types.resource"
+minlength = 1
+description = "Independently addressable Foundry resources."
+
+[types.resource]
+type = "table"
+
+    [types.resource.kind]
+    type = "string"
+    # TBD: expand as resource declarations are implemented.
+    allowedvalues = [
+        "ontology",
+        "space",
+        "object-type",
+        "project",
+    ]
+
+    [types.resource.name]
+    type = "string"
+    minlength = 1
+
+    [types.resource.alias]
+    type = "string"
+    minlength = 1
+    optional = true
+    description = "Optional local-only name for this resource."
+
+    [types.resource.default]
+    type = "boolean"
+    optional = true
+    description = "Select this declaration by default within its resolved context."
+
+    [types.resource.deployment]
+    type = "string"
+    minlength = 1
+    optional = true
+    description = "Deployment name referenced by this declaration."
+
+    [types.resource.rid]
+    type = "string"
+    pattern = "^ri\\.[A-Za-z0-9._-]+$"
