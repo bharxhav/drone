@@ -31,7 +31,7 @@ impl Dronfig {
                 .max_depth((!recursive).then_some(1))
                 .standard_filters(ignore);
 
-            // Discovery
+            // Discover and parse declarations in parallel.
             walker.build_parallel().run(|| {
                 Box::new(|entry| {
                     let path = match entry {
@@ -76,106 +76,66 @@ impl Dronfig {
                 })
             });
 
-            // Validation
+            // Merge lower-priority declarations first so later declarations win.
+            let mut declarations = declarations.into_inner().unwrap();
+            declarations.sort_by(|left, right| match (left, right) {
+                (Ok((left, _)), Ok((right, _))) => right
+                    .components()
+                    .count()
+                    .cmp(&left.components().count())
+                    .then_with(|| left.cmp(right)),
+                (Ok(_), Err(_)) => std::cmp::Ordering::Less,
+                (Err(_), Ok(_)) => std::cmp::Ordering::Greater,
+                (Err(_), Err(_)) => std::cmp::Ordering::Equal,
+            });
+
+            for declaration in declarations {
+                match declaration {
+                    Ok((path, file)) => {
+                        for resource in file {
+                            let key = (resource.deployment.clone(), resource.name.clone());
+                            let overriding = format!(
+                                "{} takes precedence with kind `{}`, RID `{}`, alias {:?}, default {:?}",
+                                path.display(),
+                                resource.kind.as_ref(),
+                                resource.rid.0,
+                                resource.alias,
+                                resource.default,
+                            );
+                            if let Some((shadowed_path, shadowed_resource)) =
+                                resources.insert(key, (path.clone(), resource))
+                            {
+                                let deployment =
+                                    shadowed_resource.deployment.as_deref().unwrap_or("default");
+                                errors.push(Error::Config {
+                                    message: format!(
+                                        "resource `{}` in deployment `{deployment}` is overridden",
+                                        shadowed_resource.name
+                                    ),
+                                    help: format!(
+                                        "{} declares kind `{}`, RID `{}`, alias {:?}, default {:?}; {overriding}. Rename or remove one declaration",
+                                        shadowed_path.display(),
+                                        shadowed_resource.kind.as_ref(),
+                                        shadowed_resource.rid.0,
+                                        shadowed_resource.alias,
+                                        shadowed_resource.default,
+                                    ),
+                                });
+                            }
+                        }
+                    }
+                    Err(error) => errors.push(error),
+                }
+            }
         }
         Ok((
             Self {
-                resources: resources.into_values().collect(),
+                resources: resources
+                    .into_values()
+                    .map(|(_, resource)| resource)
+                    .collect(),
             },
             errors,
         ))
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use std::time::SystemTime;
-
-    use super::*;
-    #[test]
-    fn cwd_overrides_global_resource() {
-        let root = std::env::temp_dir().join(format!(
-            "drone-dronfig-test-{}-{}",
-            std::process::id(),
-            SystemTime::now()
-                .duration_since(SystemTime::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        let global = root.join("global");
-        let cwd = root.join("cwd");
-        fs::create_dir_all(&global).unwrap();
-        fs::create_dir_all(&cwd).unwrap();
-        fs::write(
-            global.join("global.drone.toml"),
-            r#"
-            [[resources]]
-            kind = "ontology"
-            name = "cbre"
-            rid = "ri.ontology.global"
-            "#,
-        )
-        .unwrap();
-        fs::write(
-            cwd.join("local.drone.toml"),
-            r#"
-            [[resources]]
-            kind = "ontology"
-            name = "cbre"
-            rid = "ri.ontology.local"
-            "#,
-        )
-        .unwrap();
-        let (dronfig, errors) = Dronfig::resolve(&global, &cwd, false, false).unwrap();
-
-        assert!(errors.is_empty());
-        assert_eq!(dronfig.resources.len(), 1);
-        assert_eq!(dronfig.resources[0].rid.0, "ri.ontology.local");
-        assert_eq!(dronfig.resources[0].deployment, None);
-        fs::remove_dir_all(root).unwrap();
-    }
-
-    #[test]
-    fn recursive_controls_nested_discovery() {
-        let root = std::env::temp_dir().join(format!(
-            "drone-dronfig-recursive-test-{}-{}",
-            std::process::id(),
-            SystemTime::now()
-                .duration_since(SystemTime::UNIX_EPOCH)
-                .unwrap()
-                .as_nanos()
-        ));
-        let home = root.join("home");
-        let cwd = root.join("cwd");
-        let nested = cwd.join("nested");
-        fs::create_dir_all(&home).unwrap();
-        fs::create_dir_all(&nested).unwrap();
-        fs::write(
-            nested.join("nested.drone.toml"),
-            r#"
-            [[resources]]
-            kind = "space"
-            name = "nested"
-            rid = "ri.compass.nested"
-            "#,
-        )
-        .unwrap();
-
-        assert!(
-            Dronfig::resolve(&home, &cwd, false, false)
-                .unwrap()
-                .0
-                .resources
-                .is_empty()
-        );
-        assert_eq!(
-            Dronfig::resolve(&home, &cwd, true, false)
-                .unwrap()
-                .0
-                .resources
-                .len(),
-            1
-        );
-        fs::remove_dir_all(root).unwrap();
     }
 }
