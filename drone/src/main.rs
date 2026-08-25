@@ -1,5 +1,6 @@
 mod config;
 mod consts;
+mod dronfig;
 mod error;
 mod resources;
 mod verb;
@@ -9,8 +10,9 @@ use etcetera::{AppStrategy, AppStrategyArgs, app_strategy::choose_native_strateg
 use sysexits::ExitCode;
 
 use crate::{
-    config::{args::ConfigArgs, file::ConfigFile, resolved::AppConfig},
+    config::resolved::DeploymentConfig,
     consts::{APP_AUTHOR, APP_NAME, APP_TOP_LEVEL_DOMAIN, LOGO},
+    dronfig::resolved::Dronfig,
     error::Error,
 };
 
@@ -29,8 +31,9 @@ const VERSION: &str = concat!(
     group = ArgGroup::new("output").args(["json", "toon"]).multiple(false)
 )]
 struct Cli {
-    #[command(flatten)]
-    config: ConfigArgs,
+    /// Foundry deployment name.
+    #[arg(long, global = true)]
+    deployment: Option<String>,
 
     /// Emit JSON output.
     #[arg(long, global = true)]
@@ -68,13 +71,32 @@ fn run() -> Result<ExitCode, Error> {
         author: APP_AUTHOR.into(),
         app_name: APP_NAME.into(),
     })
-    .map_err(|error| Error::Config(error.to_string()))?;
+    .map_err(|error| Error::Config {
+        message: format!("could not locate the configuration directory: {error}"),
+        help: "check that the platform configuration directory is available".into(),
+    })?;
 
-    let content = std::fs::read_to_string(strategy.in_config_dir("config.toml"))?;
+    let initial_matches = Cli::command().ignore_errors(true).get_matches();
+    let deployment = initial_matches.get_one::<String>("deployment").cloned();
+
+    let config_dir = strategy.config_dir();
+    let cwd = std::env::current_dir()?;
+
+    // Resolve Configs
+    let config = DeploymentConfig::resolve(&config_dir.join("config.toml"), deployment)?;
+    let (dronfig, dronfig_errors) = Dronfig::resolve(&config_dir, &cwd, false, true)?;
+
+    // Print warnings
+    for error in dronfig_errors {
+        eprintln!("{:?}", error.warning());
+    }
+
+    // Construct synthetic command space
     let mut command = Cli::command();
-    for resource in resources::resources() {
+    for resource in resources::names(&dronfig, &config) {
         command = command.subcommand(verb::command(resource));
     }
+
     let matches = command.try_get_matches()?;
     let cli = Cli::from_arg_matches(&matches)?;
     let config = AppConfig::new(toml::from_str::<ConfigFile>(&content)?, cli.config)?;
