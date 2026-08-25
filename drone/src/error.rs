@@ -1,6 +1,6 @@
 use std::io;
 
-use miette::Diagnostic;
+use miette::{Diagnostic, Severity};
 use sysexits::ExitCode;
 use thiserror::Error;
 
@@ -30,5 +30,27 @@ impl Error {
             Self::Clap(_) => ExitCode::Usage,
             Self::Io(_) => ExitCode::IoErr,
         }
+    }
+
+    pub fn warning(self) -> miette::Report {
+        miette::Report::new(Warning(self))
+    }
+}
+
+#[derive(Debug, Error)]
+#[error("{0}")]
+struct Warning(Error);
+
+impl Diagnostic for Warning {
+    fn code<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
+        self.0.code()
+    }
+
+    fn severity(&self) -> Option<Severity> {
+        Some(Severity::Warning)
+    }
+
+    fn help<'a>(&'a self) -> Option<Box<dyn std::fmt::Display + 'a>> {
+        self.0.help()
     }
 }
