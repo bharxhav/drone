@@ -2,8 +2,9 @@ mod config;
 mod consts;
 mod dronfig;
 mod error;
-mod resources;
 mod verb;
+
+use std::collections::BTreeSet;
 
 use clap::{ArgGroup, CommandFactory, FromArgMatches, Parser, Subcommand};
 use etcetera::{AppStrategy, AppStrategyArgs, app_strategy::choose_native_strategy};
@@ -93,23 +94,34 @@ fn run() -> Result<ExitCode, Error> {
 
     // Construct synthetic command space
     let mut command = Cli::command();
-    for resource in resources::names(&dronfig, &config) {
+    let resource_names = dronfig
+        .resources
+        .iter()
+        .filter(|resource| {
+            resource
+                .deployment
+                .as_ref()
+                .is_none_or(|deployment| deployment == &config.name)
+        })
+        .flat_map(|resource| [resource.name.clone(), resource.kind.as_ref().into()])
+        .collect::<BTreeSet<_>>();
+    for resource in resource_names {
         command = command.subcommand(verb::command(resource));
     }
 
     let matches = command.try_get_matches()?;
     let cli = Cli::from_arg_matches(&matches)?;
-    let config = AppConfig::new(toml::from_str::<ConfigFile>(&content)?, cli.config)?;
-    let _ = (cli.json, cli.toon);
+    let _ = (&cli.deployment, cli.json, cli.toon);
 
     // Dispatch with one fully resolved configuration.
     Ok(match cli.command {
         Some(Command::Man) => {
-            let _ = &config;
+            let _ = (&config, &dronfig);
             ExitCode::Unavailable
         }
         None => {
-            let _ = (&config.url, &config.token, &config.ontology, &config.space);
+            let _ = (&config.uri, &config.token);
+            let _ = &dronfig.resources;
             Cli::command().print_help().expect("failed to print help");
             println!();
             ExitCode::Ok
