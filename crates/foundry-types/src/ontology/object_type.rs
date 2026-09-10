@@ -4,10 +4,10 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Rid, ontology::DataType};
+use crate::{Rid, ontology::object_property_data_type::ObjectPropertyDataType};
 use link_type::LinkType;
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ObjectType {
     pub api_name: String,
@@ -30,10 +30,11 @@ pub enum Status {
     Deprecated,
 }
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Property {
     pub description: Option<String>,
-    pub data_type: DataType,
+    pub data_type: ObjectPropertyDataType,
+    pub value_type_api_name: Option<String>,
     pub rid: Rid,
 }

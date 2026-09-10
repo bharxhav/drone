@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Rid, ontology::DataType};
+use crate::{Rid, ontology::action_parameter_data_type::ActionParameterDataType};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -17,5 +17,5 @@ pub struct ActionType {
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Parameter {
-    pub data_type: DataType,
+    pub data_type: ActionParameterDataType,
 }
