@@ -340,6 +340,9 @@ dependencies = [
 [[package]]
 name = "foundry-types"
 version = "0.1.0"
+dependencies = [
+ "serde",
+]
 
 [[package]]
 name = "fs_extra"

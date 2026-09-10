@@ -1,6 +1,9 @@
 use std::fmt;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Deserialize, Serialize)]
+#[serde(try_from = "String", into = "String")]
 pub struct Rid {
     value: String,
     service: String,
@@ -45,6 +48,20 @@ impl Rid {
 impl fmt::Display for Rid {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.value.fmt(formatter)
+    }
+}
+
+impl TryFrom<String> for Rid {
+    type Error = String;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        Self::new(value.clone()).ok_or(value)
+    }
+}
+
+impl From<Rid> for String {
+    fn from(rid: Rid) -> Self {
+        rid.value
     }
 }
 
