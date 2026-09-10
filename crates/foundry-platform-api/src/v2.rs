@@ -1,3 +1,6 @@
+mod fs;
+mod os;
+
 use reqwest::header::{AUTHORIZATION, HeaderMap, HeaderValue};
 use url::Url;
 
