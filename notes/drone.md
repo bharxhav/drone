@@ -1,7 +1,7 @@
 # Drone
 
 ```text
-          +---- Any Changes To Ontology Object-types <--------------------------------------+
+          +---- Any Changes to any resource <-----------------------------------------------+
           |                                                                                 |
           v                                                                                 |
  Palantir Live Data                                                                         |
@@ -21,14 +21,12 @@ first-time local snapshot                  refresh local snapshots              
                                  v                                                          |
                    drone check [resources...]                                               |
                                  |                                                          |
-                                 | always compares                                          |
-                                 v                                                          |
-                   Palantir Live Data <-> Local Evidence                                    |
+                                 |                                                          |
                                  |                                                          |
                    +-------------+-------------+                                            |
                    |                           |                                            |
                    v                           v                                            |
-          Rust-style diagnostics      drone prompt [resources...]                           |
+          Rust-style diagnostics      drone draft [resources...]                            |
                                       AI-ready Foundry change prompt                        |
                                                   |                                         |
                                                   v                                         |
@@ -55,7 +53,7 @@ Code repositories are added as Git submodules for composability.
 
 `drone import ri..` imports a Palantir resource into the Drone project for the first time. For ontology resources, it records a local snapshot of the live definition and identity. It creates `dronfig.toml` and `dronfig.lock` for housekeeping.
 
-`drone check [resource]` compares Palantir Live Data against requested local resource.
+`drone sync [resources....]` refresh a stale resource.
 
 `drone compare [resources...]` compares two local resources for any overlap and reports any mismatch.
 
