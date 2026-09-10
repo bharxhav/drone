@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 clap = { version = "4.6.4", features = ["derive"] }
+foundry-types.workspace = true
 miette.workspace = true
 sysexits.workspace = true
 thiserror.workspace = true

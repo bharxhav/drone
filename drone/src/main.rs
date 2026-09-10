@@ -1,9 +1,8 @@
 mod error;
-mod rid;
 
 use clap::{Parser, Subcommand};
 use error::Error;
-use rid::Rid;
+use foundry_types::Rid;
 use sysexits::ExitCode;
 
 #[derive(Debug, Parser)]

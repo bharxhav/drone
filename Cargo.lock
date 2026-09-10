@@ -291,6 +291,7 @@ name = "drone"
 version = "0.1.0"
 dependencies = [
  "clap",
+ "foundry-types",
  "miette",
  "sysexits",
  "thiserror",

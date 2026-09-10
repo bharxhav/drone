@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Rid {
     value: String,
@@ -86,4 +88,3 @@ mod tests {
         }
     }
 }
-use std::fmt;
