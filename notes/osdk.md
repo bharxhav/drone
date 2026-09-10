@@ -36,3 +36,20 @@ STALE                     CURRENT                         CURRENT
                frozen, repository-specific TypeScript views
                     of the Ontology at generation time
 ```
+
+## criticism
+
+1. Object types cannot have shared ownership.
+2. The model requires careful coordination and firefighting.
+3. Publications do not break packages inside the monorepo, but can break other products that depend on the object types.
+4. There are no migrations.
+
+## advantages
+
+1. Clean architecture.
+2. Build once, deploy anywhere.
+3. Dependencies inside the monorepo are guaranteed to surface in CI.
+
+## my take
+
+I feel the benefits don't outway the problems. Ordinarily teams are quite chaotic and this is unnecessary centralization.
