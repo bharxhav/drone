@@ -17,6 +17,13 @@ pub enum Error {
         command: &'static str,
         resources: Vec<String>,
     },
+
+    #[error("not a valid RID: {value}")]
+    #[diagnostic(
+        code(drone::rid),
+        help("expected `ri.<service>.<instance>.<resource-type>.<locator>`")
+    )]
+    InvalidRid { value: String },
 }
 
 impl Error {
@@ -24,6 +31,7 @@ impl Error {
         match self {
             Self::Clap(_) => ExitCode::Usage,
             Self::Unimplemented { .. } => ExitCode::Unavailable,
+            Self::InvalidRid { .. } => ExitCode::DataErr,
         }
     }
 }

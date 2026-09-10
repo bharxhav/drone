@@ -1,7 +1,9 @@
 mod error;
+mod rid;
 
 use clap::{Parser, Subcommand};
 use error::Error;
+use rid::Rid;
 use sysexits::ExitCode;
 
 #[derive(Debug, Parser)]
@@ -49,7 +51,16 @@ fn main() -> ExitCode {
 fn run() -> Result<ExitCode, Error> {
     let command = Cli::try_parse()?.command;
     let (name, resources) = match command {
-        Command::Import { rids } => ("import", rids),
+        Command::Import { rids } => {
+            let rids = rids
+                .into_iter()
+                .map(|value| Rid::new(value.clone()).ok_or(Error::InvalidRid { value }))
+                .collect::<Result<Vec<_>, _>>()?;
+            (
+                "import",
+                rids.into_iter().map(|rid| rid.to_string()).collect(),
+            )
+        }
         Command::Sync { resources } => ("sync", resources),
         Command::Compare { resources } => ("compare", resources),
         Command::Draft { resources } => ("draft", resources),
