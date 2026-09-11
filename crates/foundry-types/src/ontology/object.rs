@@ -2,16 +2,16 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::Rid;
+use crate::{ApiName, Rid};
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Object {
     pub ontology_rid: Rid,
-    pub object_type_api_name: String,
+    pub object_type_api_name: ApiName,
     pub rid: Rid,
     pub primary_key: PropertyValue,
-    pub properties: HashMap<String, PropertyValue>,
+    pub properties: HashMap<ApiName, PropertyValue>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -36,7 +36,7 @@ pub enum PropertyValue {
     Secured(Box<SecuredPropertyValue>),
     Short(i16),
     String(String),
-    Struct(HashMap<String, PropertyValue>),
+    Struct(HashMap<ApiName, PropertyValue>),
     Timestamp(String),
     Timeseries(TimeseriesProperty),
     Vector(Vec<f64>),

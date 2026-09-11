@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Rid, ontology::object_property_data_type::ObjectPropertyDataType};
+use crate::{ApiName, Rid, ontology::object_property_data_type::ObjectPropertyDataType};
 use link_type::LinkTypeSide;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -13,23 +13,23 @@ pub struct ObjectTypeFullMetadata {
     pub ontology_rid: Rid,
     pub object_type: ObjectType,
     pub link_types: Vec<LinkTypeSide>,
-    pub implements_interfaces: Vec<String>,
-    pub implements_interfaces2: HashMap<String, InterfaceImplementation>,
-    pub shared_property_type_mapping: HashMap<String, String>,
+    pub implements_interfaces: Vec<ApiName>,
+    pub implements_interfaces2: HashMap<ApiName, InterfaceImplementation>,
+    pub shared_property_type_mapping: HashMap<ApiName, ApiName>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ObjectType {
-    pub api_name: String,
+    pub api_name: ApiName,
     pub description: Option<String>,
     pub display_name: String,
     pub plural_display_name: String,
     pub status: Status,
     pub icon: Icon,
-    pub primary_key: String,
-    pub title_property: String,
-    pub properties: HashMap<String, Property>,
+    pub primary_key: ApiName,
+    pub title_property: ApiName,
+    pub properties: HashMap<ApiName, Property>,
     pub rid: Rid,
     pub visibility: Option<Visibility>,
     pub aliases: Vec<String>,
@@ -68,7 +68,7 @@ pub struct Property {
     pub rid: Rid,
     pub status: Option<PropertyStatus>,
     pub visibility: Option<Visibility>,
-    pub value_type_api_name: Option<String>,
+    pub value_type_api_name: Option<ApiName>,
     pub value_formatting: Option<serde_json::Value>,
     pub type_classes: Vec<TypeClass>,
 }
@@ -95,12 +95,12 @@ pub struct TypeClass {
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InterfaceImplementation {
-    pub api_name: Option<String>,
+    pub api_name: Option<ApiName>,
     pub rid: Option<Rid>,
-    pub properties: HashMap<String, String>,
+    pub properties: HashMap<ApiName, ApiName>,
     pub properties_v2: HashMap<String, serde_json::Value>,
-    pub links: HashMap<String, Vec<String>>,
-    pub action_types: HashMap<String, String>,
+    pub links: HashMap<ApiName, Vec<ApiName>>,
+    pub action_types: HashMap<ApiName, ApiName>,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

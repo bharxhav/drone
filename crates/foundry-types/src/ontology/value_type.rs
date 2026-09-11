@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-use crate::Rid;
+use crate::{ApiName, Rid};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ValueType {
-    pub api_name: String,
+    pub api_name: ApiName,
     pub description: Option<String>,
     pub display_name: String,
     pub status: Status,

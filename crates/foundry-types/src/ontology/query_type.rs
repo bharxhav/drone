@@ -2,13 +2,13 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::Rid;
+use crate::{ApiName, Rid};
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QueryType {
     pub ontology_rid: Rid,
-    pub api_name: String,
+    pub api_name: ApiName,
     pub description: Option<String>,
     pub display_name: Option<String>,
     pub parameters: HashMap<String, QueryParameter>,
@@ -31,7 +31,7 @@ pub struct QueryParameter {
 pub enum QueryDataType {
     Date,
     InterfaceObject {
-        interface_api_name: String,
+        interface_api_name: ApiName,
     },
     Struct {
         fields: Vec<QueryStructField>,
@@ -48,7 +48,7 @@ pub enum QueryDataType {
         sub_type: Box<QueryDataType>,
     },
     ObjectSet {
-        object_api_name: String,
+        object_api_name: ApiName,
     },
     TwoDimensionalAggregation,
     TypeReference {
@@ -72,10 +72,10 @@ pub enum QueryDataType {
     MediaReference,
     Null,
     InterfaceObjectSet {
-        interface_api_name: String,
+        interface_api_name: ApiName,
     },
     Object {
-        object_api_name: String,
+        object_api_name: ApiName,
     },
 }
 
