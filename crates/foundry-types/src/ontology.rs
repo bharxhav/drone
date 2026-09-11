@@ -3,7 +3,6 @@ pub mod action_type;
 pub mod interface_type;
 pub mod object;
 pub mod object_property_data_type;
-pub mod object_set;
 pub mod object_type;
 pub mod query_type;
 pub mod value_type;
