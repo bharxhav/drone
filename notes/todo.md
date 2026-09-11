@@ -10,6 +10,7 @@ show resolved aliases command when running
 
 WISHLIST:
 want to be able to like design erds that encode a lot of details and rationale and also persist to palantir.
+nomenclature tools so that name spaces can be set for project
 
 ability to have object sets and queries that again get used for automations etc
 ability to visually view them too, from same source.
