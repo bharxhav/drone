@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 use crate::Rid;
 
@@ -28,11 +27,11 @@ pub enum PropertyValue {
     Double(f64),
     Float(f32),
     Geopoint(GeoJson),
-    GeotimeSeriesReference(Value),
+    GeotimeSeriesReference(GeotimeSeriesReference),
     Geoshape(GeoJson),
     Integer(i32),
     Long(i64),
-    Marking(Value),
+    Marking(Marking),
     MediaReference(MediaReference),
     Secured(Box<SecuredPropertyValue>),
     Short(i16),
@@ -95,13 +94,50 @@ pub struct TimeseriesTemplate {
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct GeoJson {
-    pub r#type: String,
-    pub coordinates: Value,
+    #[serde(flatten)]
+    pub geometry: GeoJsonGeometry,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(tag = "type")]
+pub enum GeoJsonGeometry {
+    Point {
+        coordinates: Position,
+    },
+    MultiPoint {
+        coordinates: Vec<Position>,
+    },
+    LineString {
+        coordinates: Vec<Position>,
+    },
+    MultiLineString {
+        coordinates: Vec<Vec<Position>>,
+    },
+    Polygon {
+        coordinates: Vec<Vec<Position>>,
+    },
+    MultiPolygon {
+        coordinates: Vec<Vec<Vec<Position>>>,
+    },
+}
+
+pub type Position = Vec<f64>;
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GeotimeSeriesReference {
+    pub series_id: String,
+    pub integration_rid: Rid,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Marking {
+    pub id: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SecuredPropertyValue {
-    pub value: Option<Value>,
+    pub value: Option<Box<PropertyValue>>,
     pub property_security_index: Option<u32>,
 }
