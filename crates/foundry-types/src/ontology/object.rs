@@ -43,8 +43,12 @@ pub enum PropertyValue {
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Attachment {
     pub rid: Rid,
+    pub filename: String,
+    pub size_bytes: u64,
+    pub media_type: String,
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
